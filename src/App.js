@@ -4,9 +4,6 @@ import React, { Component } from 'react'
 import SafeGraphvizRender from './SafeGraphvizRender'
 import { Graphviz } from 'graphviz-react'
 
-const dotparse = require('dotparser')
-
-
 type State = {
     graphvizStr : string
 }
@@ -27,7 +24,7 @@ class App extends Component< {}, State> {
     }
 
 
-    transferGraphvizTextToState = (evt: SyththeticEvent<HTMLButtonElement>) => {
+    transferGraphvizTextToState = (evt: SyntheticEvent<HTMLButtonElement>) => {
         if (this.graphvizTextArea !== null) {
             let dot = this.graphvizTextArea.current.value
 
