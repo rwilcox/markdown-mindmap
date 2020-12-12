@@ -33,35 +33,33 @@ class App extends Component< {}, State> {
         }
     }
 
-
+    // <header className="App-header">
+    //  <p>Edit <code>src/App.js</code> and save to reload.</p>
+    // </header>
+ 
     render() {
         return (
-                <div className="App">
-		  {
-	//       <header className="App-header">
-	//         <p>Edit <code>src/App.js</code> and save to reload.</p>
-	//       </header>
-		  }
-		  <section>
-			<div>
-		            <textarea ref={this.graphvizTextArea}
-                                id="graphviz-input" cols="80" style={{height: "15em"}}
-                                >{this.state.graphvizStr}</textarea>
-                            <button onClick={this.transferGraphvizTextToState}>Render</button>
-			</div>
-		<div>
-
-                { /* ARGGHH this will STILL show the error overlay in dev mode, even
-                     though we actually handle the error.
-                     https://github.com/facebook/create-react-app/issues/3627
-                     RPW 12/10/2020
-                  */}
-                <SafeGraphvizRender ref={this.safeGraphViz}>
-                        <Graphviz dot={this.state.graphvizStr} />
-                    </SafeGraphvizRender>
-		        </div>
-		  </section>
-                </div>
+            <div className="App">
+                <section>
+                    <div>
+                        <textarea ref={this.graphvizTextArea}
+                                        id="graphviz-input" cols="80" style={{height: "15em"}}
+                                        >{this.state.graphvizStr}</textarea>
+                        <button onClick={this.transferGraphvizTextToState}>Render</button>
+                    </div>
+                    <div>
+                        { /* ARGGHH this will STILL show the error overlay in dev mode, even
+                             though we actually handle the error.
+                             https://github.com/facebook/create-react-app/issues/3627
+                             RPW 12/10/2020
+                          */
+                        }
+                        <SafeGraphvizRender ref={this.safeGraphViz}>
+                            <Graphviz dot={this.state.graphvizStr} />
+                        </SafeGraphvizRender>
+                    </div>
+                </section>
+            </div>
         )
     }
 }
