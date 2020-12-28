@@ -2,9 +2,19 @@
 import React, { Component } from 'react'
 import type { Node } from 'react'
 
-class SafeGraphvizRender extends Component< { }, { errorMessage: ""} > {
+type SafeGraphVizRenderState = {
+    errorMessage: ?string
+}
+
+type Props = {
+  children?: Node,
+};
+
+type GraphVizError = (Error | string) // errors from graphviz-react can be just strings. ARRGHH
+
+class SafeGraphvizRender extends Component< Props, SafeGraphVizRenderState > {
     dotString: string
-    state = {
+    state : SafeGraphVizRenderState = {
         errorMessage: ""
     }
 
@@ -14,25 +24,39 @@ class SafeGraphvizRender extends Component< { }, { errorMessage: ""} > {
     }
 
 
-    componentDidCatch(error : Error) {
-        this.setState( {errorMessage: error} )
+    _messageForGraphVizError(error: GraphVizError): String {
+        if ( typeof error == 'string' ) {
+            return error
+        } else {
+            return error.message
+        }
     }
 
 
-    static getDerivedStateFor(error: Error) {
-        return { errorMessage: error }
+    componentDidCatch(error: GraphVizError) {
+        this.setState( {errorMessage: this._messageForGraphVizError(error) } )
+    }
+
+
+    static getDerivedStateFor(error: GraphVizError) : SafeGraphVizRenderState {
+        return { errorMessage: this._messageForGraphVizError(error) }
     }
 
 
     render() : Node {
-        if (this.state.errorMessage.length > 0) {
-            return <p>{this.state.errorMessage}</p>
+        if (this.state.errorMessage) {
+            if (this.state.errorMessage.length > 0) {
+                return <p>{this.state.errorMessage}</p>
+            }
         }
 
-        let output =  this.props.children
-//        if ( this.state.errorMessage.length > 0) {
-//            this.setState( {errorMessage: ""} ) // got this far? no error to show
-//        }
+        let output : Node
+
+        if ( this.props.children ) {
+            output =  this.props.children
+        } else {
+            output = <div>Impossible</div>
+        }
 
         return output
     }
