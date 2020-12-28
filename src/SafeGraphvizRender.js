@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react'
+import type { Node } from 'react'
 
 class SafeGraphvizRender extends Component< { }, { errorMessage: ""} > {
     dotString: string
@@ -13,17 +14,17 @@ class SafeGraphvizRender extends Component< { }, { errorMessage: ""} > {
     }
 
 
-    componentDidCatch(error : string) {
+    componentDidCatch(error : Error) {
         this.setState( {errorMessage: error} )
     }
 
 
-    static getDerivedStateFor(error) {
+    static getDerivedStateFor(error: Error) {
         return { errorMessage: error }
     }
 
 
-    render() {
+    render() : Node {
         if (this.state.errorMessage.length > 0) {
             return <p>{this.state.errorMessage}</p>
         }
