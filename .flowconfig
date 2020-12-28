@@ -1,16 +1,19 @@
-[ignore]
-
 [include]
 src/
 
+[ignore]
+<PROJECT_ROOT>/node_modules/.*
+
+
 [libs]
+flow-typed/*
 
 [lints]
 
 [options]
-all = true
-experimental.const_params = true
-include_warnings = true
-munge_underscores = true
+all=true
+experimental.const_params=true
+include_warnings=true
+munge_underscores=true
 
 [strict]
