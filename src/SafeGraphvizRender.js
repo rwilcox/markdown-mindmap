@@ -24,7 +24,7 @@ class SafeGraphvizRender extends Component< Props, SafeGraphVizRenderState > {
     }
 
 
-    _messageForGraphVizError(error: GraphVizError): String {
+    static _messageForGraphVizError(error: GraphVizError): string {
         if ( typeof error == 'string' ) {
             return error
         } else {
@@ -34,7 +34,7 @@ class SafeGraphvizRender extends Component< Props, SafeGraphVizRenderState > {
 
 
     componentDidCatch(error: GraphVizError) {
-        this.setState( {errorMessage: this._messageForGraphVizError(error) } )
+        this.setState( {errorMessage: SafeGraphvizRender._messageForGraphVizError(error) } )
     }
 
 
