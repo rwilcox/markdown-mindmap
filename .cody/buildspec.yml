@@ -8,4 +8,5 @@ phases:
       ruby: latest
   build:
     commands:
+      - yarn install
       - bash build-scripts/test.sh
