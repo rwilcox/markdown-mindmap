@@ -17,5 +17,5 @@ test('renders learn react link', () => {
 test('correctly puts subheadings under the correct headline', () => {
     let t = new App( {} )
 
-    expect( t.organizeHeadingEntries() ).toBe(2)
+    expect( t.organizeHeadingEntries( {} ) ).toBe(2)
 })
