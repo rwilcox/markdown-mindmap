@@ -1,12 +1,24 @@
-import './App.css';
-
 import React, { Component } from 'react'
 import type { Ref, Node } from 'react'
-import SafeGraphvizRender from './SafeGraphvizRender'
+
 import { Graphviz } from 'graphviz-react'
+import SafeGraphvizRender from './SafeGraphvizRender'
+
+const remark = require('remark')
+const R      = require('ramda')
+
+// import './App.css';
+// TODO: figure out how to make Babel process .css files
 
 type State = {
     graphvizStr : string
+}
+
+type RemarkNodeType = {
+    type: string,
+    children: Array<RemarkNodeType>,
+    depth: number,  // how many ##s the heading has
+    value: string
 }
 
 class App extends Component< {}, State> {
@@ -16,13 +28,19 @@ class App extends Component< {}, State> {
 
     graphvizTextArea : { current: null | HTMLTextAreaElement }  // WTF : https://stackoverflow.com/q/50076176/224334
     safeGraphViz     : { current: null | SafeGraphvizRender }
+    markdownTextArea : { current: null | HTMLTextAreaElement }
 
     constructor(props: any) {
         super(props)
 
         this.graphvizTextArea = React.createRef()
         this.safeGraphViz     = React.createRef()
+        this.markdownTextArea = React.createRef()
+    }
 
+
+    organizeHeadingEntries( thingsIn: any/* Array<RemarkNodeType> */): number {
+        return 1
     }
 
 
@@ -41,6 +59,48 @@ class App extends Component< {}, State> {
     }
 
 
+    _generateGraphFromMarkdown = (evt: SyntheticEvent<HTMLButtonElement>) => {
+        if ( (this.markdownTextArea !== null) && (this.markdownTextArea.current !== null) ) {
+            let markdownStr = this.markdownTextArea.current.value
+
+            let markdownAST: RemarkNodeType = remark().parse(markdownStr)
+
+            // headings are encoded via
+            /*
+              { type: "heading",
+                children: [ {
+                    type: "text",
+                    value: "heading 1"
+                }]}
+
+                NOTE: these are NOT embedded in each other semantically in an outline:
+                it's a flat list of headlines.
+
+                We want to generate a graphviz digram like:
+
+                "headline 1" -> "headline 2"
+                "headline 2" -> "headline 3", "headline 4"
+
+                "headline 4" -> "headline 5"
+
+                This seems the most regular way to generate this graph source code.
+                We only want to go one deep, and assume later declarations will
+                specify whatever child items are under the headline.
+
+                So:
+                 1. Make these items a tree?
+                 2. Or at least figure out the previous item in the list and
+            */
+
+            /*
+              In graphviz we want to turn this into
+
+             */
+            console.dir(markdownAST)
+        }
+
+    }
+
     // <header className="App-header">
     //  <p>Edit <code>src/App.js</code> and save to reload.</p>
     // </header>
@@ -50,6 +110,8 @@ class App extends Component< {}, State> {
             <div className="App">
                 <section>
                     <div>
+                <textarea ref={this.markdownTextArea} cols="80" style={{height: "15em"}}></textarea>
+                <button onClick={this._generateGraphFromMarkdown}>MMD -> DOT</button>
                         <textarea ref={this.graphvizTextArea}
                                         id="graphviz-input" cols="80" style={{height: "15em"}}
                                         >{this.state.graphvizStr}</textarea>
