@@ -1,3 +1,21 @@
+# About this project
+
+
+## The Tech Involved
+
+This single page web app uses [React](https://reactjs.org/), [Flow](https://flow.org/), built with [AWS CodeBuild](https://aws.amazon.com/codebuild/).
+
+### React
+
+### Flow
+
+### AWS CodeBuild
+
+Infrastructure and utilities (like looking at build logs) provided by [Cody](https://cody.run/).
+
+
+... BOILERPLATE FROM CREATE REACT APP STARTS HERE...
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
