@@ -4,6 +4,9 @@ import type { Ref, Node } from 'react'
 import { Graphviz } from 'graphviz-react'
 import SafeGraphvizRender from './SafeGraphvizRender'
 
+import type { RemarkNodeType } from './models/RemarkNodeType'
+import MarkdownNode from './models/MarkdownNode'
+
 const remark = require('remark')
 const R      = require('ramda')
 
@@ -14,12 +17,7 @@ type State = {
     graphvizStr : string
 }
 
-type RemarkNodeType = {
-    type: string,
-    children: Array<RemarkNodeType>,
-    depth: number,  // how many ##s the heading has
-    value: string
-}
+
 
 class App extends Component< {}, State> {
     state : State = {
@@ -36,11 +34,6 @@ class App extends Component< {}, State> {
         this.graphvizTextArea = React.createRef()
         this.safeGraphViz     = React.createRef()
         this.markdownTextArea = React.createRef()
-    }
-
-
-    organizeHeadingEntries( thingsIn: any/* Array<RemarkNodeType> */): number {
-        return 1
     }
 
 
