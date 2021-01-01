@@ -55,7 +55,7 @@ class MarkdownNode {
     static  organizeHeadingEntries(thingsIn: Array<RemarkNodeType>): MarkdownNode {
         let root = new MarkdownNode()
 
-        let currentParent = root
+        let currentParent : MarkdownNode = root
 
         for (let current: RemarkNodeType of thingsIn) {
             // TODO: ewww
@@ -64,12 +64,21 @@ class MarkdownNode {
                 let transformed = new MarkdownNode(current)
 
                 transformed.extractTextFromRemarkNodeType(current)
-                let depthParentExpectsTheirChildrenToBe = currentParent.depth + 1
+                let depthParentExpectsTheirChildrenToBe
+                if (currentParent !== null) {
+                    depthParentExpectsTheirChildrenToBe = currentParent.depth + 1
+                } else {
+                    depthParentExpectsTheirChildrenToBe = 1 // if there's no parent we must be at the top
+                }
 
                 // went from a H1 -> H2
                 if (current.depth > depthParentExpectsTheirChildrenToBe) {
 
-                    currentParent = R.last(currentParent.children)
+                    currentParent = ( (R.last(currentParent.children) : any) : MarkdownNode )
+                    // ^^ while technically the compiler is correct here ignore this for now
+                    // only way this could actually happen is people giving markdown that just doesn't make sense
+                    // structually. Deal with that problem later. WD-rpw 01/01/2021
+
                     transformed.parent = currentParent
 
                     currentParent.children.push(transformed)
