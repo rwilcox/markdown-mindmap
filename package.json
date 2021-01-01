@@ -26,7 +26,8 @@
   "scripts": {
     "start": "react-scripts --max_old_space_size=4096 start",
     "build": "react-scripts build",
-    "test": "jest --no-color",
+    "test": "node --unhandled-rejections=strict node_modules/.bin/jest --no-color --runInBand",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "eject": "react-scripts eject",
     "flow": "flow"
   },
