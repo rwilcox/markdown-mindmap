@@ -80,6 +80,18 @@ test('correctly sets sibling items as siblings when parsed', () => {
         },
         {
             type: 'heading',
+            depth: 3,
+            children: [
+                {
+                    type: 'text',
+                    depth: 4,
+                    children: [],
+                    value: 'Headline 3, #2'
+                }
+            ]
+        },
+        {
+            type: 'heading',
             depth: 1,
             children: [
                 {
@@ -113,7 +125,8 @@ test('correctly sets sibling items as siblings when parsed', () => {
 
     // we can figure out that a ## headline should go under a # headline?
     expect(res.children[0].children[0].text).toBe("Headline 2, #1")
-    expect(res.children[0].children[0].children.length).toBe(1)
+
+    expect(res.children[0].children[0].children.length).toBe(2)
 
     // can we figure out the user has gone back UP the stack - they have stopped working on that depth in the outline and come up a couple?
     expect(res.children[1].text).toBe('Headline 1, #2')
