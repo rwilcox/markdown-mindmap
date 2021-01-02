@@ -57,39 +57,14 @@ class App extends Component< {}, State> {
             let markdownStr = this.markdownTextArea.current.value
 
             let markdownAST: RemarkNodeType = remark().parse(markdownStr)
+            let output : MarkdownNode = MarkdownNode.organizeHeadingEntries(markdownAST.children)
 
-            // headings are encoded via
-            /*
-              { type: "heading",
-                children: [ {
-                    type: "text",
-                    value: "heading 1"
-                }]}
+            let generatedGraphStr = output.recursiveGraphvizNode()
+            //console.dir( markdownAST )
 
-                NOTE: these are NOT embedded in each other semantically in an outline:
-                it's a flat list of headlines.
-
-                We want to generate a graphviz digram like:
-
-                "headline 1" -> "headline 2"
-                "headline 2" -> "headline 3", "headline 4"
-
-                "headline 4" -> "headline 5"
-
-                This seems the most regular way to generate this graph source code.
-                We only want to go one deep, and assume later declarations will
-                specify whatever child items are under the headline.
-
-                So:
-                 1. Make these items a tree?
-                 2. Or at least figure out the previous item in the list and
-            */
-
-            /*
-              In graphviz we want to turn this into
-
-             */
-            console.dir(markdownAST)
+            let validgraphViz = `digraph { \n ${generatedGraphStr} \n}`
+            this.setState({graphvizStr: validgraphViz})
+            this.graphvizTextArea.current.value = validgraphViz // TODO: ugh is this right?
         }
 
     }

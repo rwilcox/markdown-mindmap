@@ -23,6 +23,43 @@ class MarkdownNode {
     }
 
 
+    asGraphvizNode() : String {
+        let childrenText = `\n\n${this.graphvizNodeName} [label = "${this.text}"]    // definition "${this.text}"`
+        if (this.children.length > 0) {
+            childrenText = childrenText + `\n${this.graphvizNodeName} -> ` + ( R.map( i => `${i.graphvizNodeName}`, this.children ) ).join(', ')
+        } else {
+            childrenText = childrenText + `\n // ${this.graphvizNodeName} -> `
+        }
+
+        return childrenText
+    }
+
+
+    /*
+               We want to generate a graphviz digram like:
+
+                "headline 1" -> "headline 2"
+                "headline 2" -> "headline 3", "headline 4"
+
+                "headline 4" -> "headline 5"
+
+                This seems the most regular way to generate this graph source code.
+                We only want to go one deep, and assume later declarations will
+                specify whatever child items are under the headline.
+
+    */
+    recursiveGraphvizNode(): String {
+        let start = this.asGraphvizNode()
+
+        let childrenOutput = []
+        for (let currentChild: MarkdownNode of this.children) {
+            childrenOutput.push( currentChild.recursiveGraphvizNode() )
+        }
+
+        return `${start}\n${childrenOutput.join('\n')}`
+    }
+
+
     // returns a unique but not too foreign looking node ID for GraphViz
     get graphvizNodeName(): string {
         let ourText = ( this.text || "" ).slice().replace(/ /g, "_" ) // replaceAll is in ECMAScript 2021
@@ -52,8 +89,20 @@ class MarkdownNode {
     }
 
 
+    /*
+              { type: "heading",
+                children: [ {
+                    type: "text",
+                    value: "heading 1"
+                }]}
+
+                NOTE: these are NOT embedded in each other semantically in an outline:
+                it's a flat list of headlines.
+
+    */
     static  organizeHeadingEntries(thingsIn: Array<RemarkNodeType>): MarkdownNode {
         let root = new MarkdownNode()
+        root.text = "root"
 
         let currentParent : MarkdownNode = root
 
@@ -86,7 +135,7 @@ class MarkdownNode {
 
                 // went from H2 -> H2
                 if ( current.depth == depthParentExpectsTheirChildrenToBe ) {
-                    let parentOfThisNewNode = currentParent.parent || root
+                    let parentOfThisNewNode = currentParent
 
                     parentOfThisNewNode.children.push(transformed)
                     transformed.parent = parentOfThisNewNode
