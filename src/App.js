@@ -64,6 +64,8 @@ class App extends Component< {}, State> {
 
             let validgraphViz = `digraph { \n ${generatedGraphStr} \n}`
             this.setState({graphvizStr: validgraphViz})
+
+            // $FlowIssue[incompatible-use]
             this.graphvizTextArea.current.value = validgraphViz // TODO: ugh is this right?
         }
 

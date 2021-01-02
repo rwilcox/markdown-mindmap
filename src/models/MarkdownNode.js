@@ -23,8 +23,8 @@ class MarkdownNode {
     }
 
 
-    asGraphvizNode() : String {
-        let childrenText = `\n\n${this.graphvizNodeName} [label = "${this.text}"]    // definition "${this.text}"`
+    asGraphvizNode() : string {
+        let childrenText = `\n\n${this.graphvizNodeName} [label = "${this.text || ''}"]    // definition "${this.text || ""}"`
         if (this.children.length > 0) {
             childrenText = childrenText + `\n${this.graphvizNodeName} -> ` + ( R.map( i => `${i.graphvizNodeName}`, this.children ) ).join(', ')
         } else {
@@ -48,7 +48,7 @@ class MarkdownNode {
                 specify whatever child items are under the headline.
 
     */
-    recursiveGraphvizNode(): String {
+    recursiveGraphvizNode(): string {
         let start = this.asGraphvizNode()
 
         let childrenOutput = []
