@@ -10,3 +10,8 @@ phases:
     commands:
       - yarn install
       - bash build-scripts/test.sh
+      - npm run build && zip -r build.zip build/
+
+artifacts:
+  files:
+    - build.zip
