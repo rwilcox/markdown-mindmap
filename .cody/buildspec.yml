@@ -10,8 +10,8 @@ phases:
     commands:
       - yarn install
       - bash build-scripts/test.sh
-      - npm run build && cd build && zip -r ../build.zip *
+      - npm run build
 
 artifacts:
   files:
-    - build.zip
+    - 'build/**/*'
