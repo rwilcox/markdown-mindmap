@@ -27,7 +27,7 @@ class App extends Component< {}, State> {
     graphvizTextArea : { current: null | HTMLTextAreaElement }  // WTF : https://stackoverflow.com/q/50076176/224334
     safeGraphViz     : { current: null | SafeGraphvizRender }
     markdownTextArea : { current: null | HTMLTextAreaElement }
-    graphvizDisplayArea : { current: null | HTMLTextAreaElement }
+    graphvizDisplayArea : { current: null | HTMLDivElement }
 
     constructor(props: any) {
         super(props)
