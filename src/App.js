@@ -27,6 +27,7 @@ class App extends Component< {}, State> {
     graphvizTextArea : { current: null | HTMLTextAreaElement }  // WTF : https://stackoverflow.com/q/50076176/224334
     safeGraphViz     : { current: null | SafeGraphvizRender }
     markdownTextArea : { current: null | HTMLTextAreaElement }
+    graphvizDisplayArea : { current: null | HTMLTextAreaElement }
 
     constructor(props: any) {
         super(props)
@@ -34,6 +35,7 @@ class App extends Component< {}, State> {
         this.graphvizTextArea = React.createRef()
         this.safeGraphViz     = React.createRef()
         this.markdownTextArea = React.createRef()
+        this.graphvizDisplayArea = React.createRef()
     }
 
 
@@ -75,7 +77,19 @@ class App extends Component< {}, State> {
     //  <p>Edit <code>src/App.js</code> and save to reload.</p>
     // </header>
 
+
+    _getWidthForGraphvizRender = () => {
+        if (this.graphvizDisplayArea && this.graphvizDisplayArea.current) {
+            let graphvizArea = this.graphvizDisplayArea.current.clientWidth
+
+            return graphvizArea
+        }
+        return 500
+    }
+
+
     render() : Node {
+        let graphvizArea = 0
         return (
             <div className="App">
                 <section>
@@ -87,15 +101,17 @@ class App extends Component< {}, State> {
                                         >{this.state.graphvizStr}</textarea>
                         <button onClick={this._transferGraphvizTextToState}>Render</button>
                     </div>
-                    <div>
+                <div ref={this.graphvizDisplayArea}>
                         { /* ARGGHH this will STILL show the error overlay in dev mode, even
                              though we actually handle the error.
                              https://github.com/facebook/create-react-app/issues/3627
                              RPW 12/10/2020
                           */
                         }
+
                         <SafeGraphvizRender ref={this.safeGraphViz}>
-                            <Graphviz dot={this.state.graphvizStr} />
+                            <Graphviz dot={this.state.graphvizStr} options={{zoom: true,
+                                                                 width: this._getWidthForGraphvizRender() }}/>
                         </SafeGraphvizRender>
                     </div>
                 </section>
