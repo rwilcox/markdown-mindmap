@@ -93,15 +93,34 @@ class App extends Component< {}, State> {
         return (
             <div className="App">
                 <section>
-                    <div>
-                <textarea ref={this.markdownTextArea} cols="80" style={{height: "15em"}}></textarea>
-                <button onClick={this._generateGraphFromMarkdown}>MMD -> DOT</button>
-                        <textarea ref={this.graphvizTextArea}
+                <details style={{marginLeft: '2em', marginTop: '0.5em', backgroundColor: 'cornsilk', marginRight: '2em'}}>
+                  <summary>About markdown mindmapper</summary>
+                <p>This writer tool is to help you translate outlines into mind maps</p>
+                <p>I like to look at my writing in several ways: I may start with an outline but want
+            to see it graphically in a mindmap.</p>
+                <p>With Markdown (<a href="https://www.markdownguide.org/cheat-sheet" target="blank">Cheatsheet</a>)
+            and Graphviz (<a href="https://graphs.grevian.org/example" target="__blank">Cheatsheet</a>) we have two tastes that taste better together</p>
+                <p>We parse your Markdown document like an outline: that heading level 1 is a main point, that the heading level 2 under it is a subpoint, so on and so forth. Then we translate that outline structure to a GraphViz graph, and render that.</p>
+                <p>I find that when looking at the graph I see relationships I did not see before. I mindmap using the generated graph, adding subpoints and making connections. After my brainstorming is done I edit the markdown source with the connections I made in graph mode</p>
+                <p>Zoom in or out with your mouse wheel, and use your mouse to grab/move the graph.</p>
+                </details>
+
+                <div style={{height: '20em'}}>
+                  <div style={{float: "left", width: '50%'}}>
+                    <h1>Markdown</h1>
+                    <textarea ref={this.markdownTextArea} cols="80" style={{height: "15em"}}></textarea>
+                    <button onClick={this._generateGraphFromMarkdown} style={{display: 'block'}}>MMD -> DOT</button>
+                  </div>
+                <div style={{float: 'right', width: '49%'}}>
+                       <h1>Graphviz "dot" language</h1>
+                       <textarea ref={this.graphvizTextArea}
                                         id="graphviz-input" cols="80" style={{height: "15em"}}
                                         >{this.state.graphvizStr}</textarea>
-                        <button onClick={this._transferGraphvizTextToState}>Render</button>
-                    </div>
+                       <button onClick={this._transferGraphvizTextToState} style={{display: 'block'}}>Render</button>
+                  </div>
+                </div>
                 <div ref={this.graphvizDisplayArea}>
+
                         { /* ARGGHH this will STILL show the error overlay in dev mode, even
                              though we actually handle the error.
                              https://github.com/facebook/create-react-app/issues/3627
@@ -112,7 +131,7 @@ class App extends Component< {}, State> {
                         <SafeGraphvizRender ref={this.safeGraphViz}>
                             <Graphviz dot={this.state.graphvizStr} options={{zoom: true,
                                                                  width: this._getWidthForGraphvizRender() }}/>
-                        </SafeGraphvizRender>
+                </SafeGraphvizRender>
                     </div>
                 </section>
             </div>
