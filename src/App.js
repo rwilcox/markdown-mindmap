@@ -103,6 +103,7 @@ class App extends Component< {}, State> {
                 <p>We parse your Markdown document like an outline: that heading level 1 is a main point, that the heading level 2 under it is a subpoint, so on and so forth. Then we translate that outline structure to a GraphViz graph, and render that.</p>
                 <p>I find that when looking at the graph I see relationships I did not see before. I mindmap using the generated graph, adding subpoints and making connections. After my brainstorming is done I edit the markdown source with the connections I made in graph mode</p>
                 <p>Zoom in or out with your mouse wheel, and use your mouse to grab/move the graph.</p>
+                <p>Watch more about <a href="https://www.youtube.com/watch?v=Wn18xcM0GeI" target="__blank">brainstorming with Graphviz</a></p>
                 </details>
 
                 <div style={{height: '20em'}}>
