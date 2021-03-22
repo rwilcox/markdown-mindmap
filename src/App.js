@@ -59,8 +59,14 @@ class App extends Component< {}, State> {
             let markdownStr = this.markdownTextArea.current.value
 
             let markdownAST: RemarkNodeType = remark().parse(markdownStr)
-            let output : MarkdownNode = MarkdownNode.organizeHeadingEntries(markdownAST.children)
-
+            let output: MarkdownNode | null = null
+            try {
+                output = MarkdownNode.organizeHeadingEntries(markdownAST.children)
+            } catch (err) {
+                alert("Error when parsing Markdown")   // TODO: import an error console compontent...
+                //console.error(err)
+                return
+            }
             let generatedGraphStr = output.recursiveGraphvizNode()
             //console.dir( markdownAST )
 
