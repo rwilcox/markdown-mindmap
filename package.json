@@ -11,9 +11,11 @@
     "flow-typed": "3.2.1"
   },
   "dependencies": {
+    "@aws-amplify/ui-react": "^1.0.6",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "aws-amplify": "^3.3.26",
     "flow-bin": "^0.139.0",
     "graphviz-react": "^1.1.1",
     "ramda": "^0.27.1",
