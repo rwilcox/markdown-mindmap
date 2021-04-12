@@ -5,6 +5,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 import AuthenticatedSpace from './AuthenticatedSpace'
+import UnauthenticatedSpace from './UnauthenticatedSpace'
+
 import Header from './Header'
 
 function userAuthenticatedSpace() {
@@ -23,8 +25,10 @@ const AuthSpace = userAuthenticatedSpace()
 
 ReactDOM.render(
   <React.StrictMode>
-      <Header />
-      <AuthSpace />
+    <Header />
+    <UnauthenticatedSpace />
+    <AuthSpace />
+
   </React.StrictMode>,
     ( ( document.getElementById('root') : any ): HTMLElement )
     // force bad type checking for ease of development. This potential runtime error is fine
