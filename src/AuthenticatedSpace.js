@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Auth } from 'aws-amplify'
+import { AmplifySignOut } from '@aws-amplify/ui-react';
 
 import EditorArea from './EditorArea'
 
@@ -10,6 +11,9 @@ type State = {
     currentUser : User
 }
 
+/*
+  This component is meant to abstract user state management from our identify provider
+*/
 class AuthenticatedSpace extends Component< {}, State > {
     state : State = {
         currentUser: {username: ''}
@@ -34,6 +38,7 @@ class AuthenticatedSpace extends Component< {}, State > {
         return (
             <div>
                 <p>{ `Hello, ${this.state.currentUser.username}` }</p>
+                <AmplifySignOut />
                 <EditorArea />
             </div>
         )
