@@ -3,11 +3,12 @@ import Amplify from 'aws-amplify';
 import { AmplifyAuthenticator, withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import EditorArea from './EditorArea';
+
+import AuthenticatedSpace from './AuthenticatedSpace'
 import Header from './Header'
 
 function userAuthenticatedSpace() {
-    return withAuthenticator( EditorArea, )
+    return withAuthenticator(AuthenticatedSpace, )
 }
 
 Amplify.configure({
