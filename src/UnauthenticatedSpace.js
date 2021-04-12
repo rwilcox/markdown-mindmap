@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import { Auth, Hub } from 'aws-amplify'
-
+import EditorArea from './EditorArea'
 
 type State = {
     show       : boolean
@@ -9,7 +9,8 @@ type State = {
 
 class UnauthenticatedSpace extends Component<{}, State> {
     state : State = {
-        show: true
+        show: true,
+        annonEditor: false
     }
 
     constructor(props) {
@@ -26,6 +27,12 @@ class UnauthenticatedSpace extends Component<{}, State> {
         })
     }
 
+
+    _showAnonEditor = (evt: SyntheticEvent<HTMLButtonElement>) => {
+        this.setState( {annonEditor: !this.state.annonEditor} )
+    }
+
+
     componentDidMount() {
         // can't call setState until component is mounted
         Auth.currentUserInfo().then( (currUser: object) => {
@@ -35,7 +42,10 @@ class UnauthenticatedSpace extends Component<{}, State> {
 
     render(): Node {
         if (this.state.show) {
-            return <div>UnauthenticatedSpace!</div>
+            return <div>
+                <button onClick={this._showAnonEditor}>Toggle Anonymous Mode</button>
+                {this.state.annonEditor ? (<EditorArea />) : (<span></span>)}
+                </div>
         } else {
             return <span></span>
         }
