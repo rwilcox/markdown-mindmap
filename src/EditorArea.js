@@ -19,7 +19,7 @@ type State = {
 
 
 
-class App extends Component< {}, State> {
+class EditorArea extends Component< {}, State> {
     state : State = {
         graphvizStr: `graph { "hi" }`
     }
@@ -132,4 +132,4 @@ class App extends Component< {}, State> {
     }
 }
 
-export default App;
+export default EditorArea;
