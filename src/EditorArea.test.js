@@ -1,5 +1,3 @@
-import App from './App'
-
 import type { RemarkNodeType } from './models/RemarkNodeType'
 
 // since we used flow-type to find jest Flow has ?? magically imported those globals?
