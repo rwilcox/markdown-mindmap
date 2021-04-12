@@ -8,7 +8,8 @@ type User = {
     username: string
 }
 type State = {
-    currentUser : User
+    currentUser : User,
+    ready       : boolean
 }
 
 /*
@@ -16,7 +17,8 @@ type State = {
 */
 class AuthenticatedSpace extends Component< {}, State > {
     state : State = {
-        currentUser: {username: ''}
+        currentUser: {username: ''},
+        ready: false
     }
 
     constructor(props: any) {
@@ -29,19 +31,23 @@ class AuthenticatedSpace extends Component< {}, State > {
     componentDidMount() {
         // can't call setState until component is mounted
         Auth.currentUserInfo().then( (currUser: object) => {
-            this.setState( {'currentUser': currUser } )
+            this.setState( {'currentUser': currUser, ready: true } )
         })
     }
 
 
     render(): Node {
-        return (
-            <div>
+        let output
+        if (this.state.ready) {
+            output = <div>
                 <p>{ `Hello, ${this.state.currentUser.username}` }</p>
                 <AmplifySignOut />
                 <EditorArea />
             </div>
-        )
+        } else {
+            output = <div>Wait...</div>
+        }
+        return output
     }
 
 }
