@@ -4,7 +4,8 @@ import { Auth, Hub } from 'aws-amplify'
 import EditorArea from './EditorArea'
 
 type State = {
-    show       : boolean
+    show        : boolean,
+    annonEditor : boolean
 }
 
 class UnauthenticatedSpace extends Component<{}, State> {
@@ -13,7 +14,7 @@ class UnauthenticatedSpace extends Component<{}, State> {
         annonEditor: false
     }
 
-    constructor(props) {
+    constructor(props : {}) {
         super(props)
 
         Hub.listen('auth', (data) => {
@@ -28,7 +29,7 @@ class UnauthenticatedSpace extends Component<{}, State> {
     }
 
 
-    _showAnonEditor = (evt: SyntheticEvent<HTMLButtonElement>) => {
+    _showAnonEditor = (evt: React.SyntheticEvent) => {
         this.setState( {annonEditor: !this.state.annonEditor} )
     }
 
@@ -40,7 +41,7 @@ class UnauthenticatedSpace extends Component<{}, State> {
         })
     }
 
-    render(): Node {
+    render() {
         if (this.state.show) {
             return <div>
                 <button onClick={this._showAnonEditor}>Toggle Anonymous Mode</button>

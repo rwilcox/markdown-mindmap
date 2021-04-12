@@ -1,3 +1,3 @@
 #!/bin/bash
 
-npm run flow check && npm test -- --ci
+npm run tsc && npm test -- --ci

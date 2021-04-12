@@ -3,12 +3,12 @@ import type { RemarkNodeType } from './RemarkNodeType'
 const R = require('ramda')
 
 class MarkdownNode {
-    parent   : ?MarkdownNode
-    text     : ?string
+    parent?   : MarkdownNode
+    text?     : string
     children : Array<MarkdownNode>
-    remarkNode : ?RemarkNodeType
+    remarkNode? : RemarkNodeType
 
-    constructor(nodeIn : ?RemarkNodeType) {
+    constructor(nodeIn? : RemarkNodeType) {
         this.remarkNode = nodeIn
         this.children = []
     }
@@ -26,7 +26,7 @@ class MarkdownNode {
     asGraphvizNode() : string {
         let childrenText = `\n\n${this.graphvizNodeName} [label = "${this.text || ''}"]    // definition "${this.text || ""}"`
         if (this.children.length > 0) {
-            childrenText = childrenText + `\n${this.graphvizNodeName} -> ` + ( R.map( i => `${i.graphvizNodeName}`, this.children ) ).join(', ')
+            childrenText = childrenText + `\n${this.graphvizNodeName} -> ` + ( R.map( (i: MarkdownNode) => `${i.graphvizNodeName}`, this.children ) ).join(', ')
         } else {
             childrenText = childrenText + `\n // ${this.graphvizNodeName} -> `
         }
@@ -52,7 +52,8 @@ class MarkdownNode {
         let start = this.asGraphvizNode()
 
         let childrenOutput = []
-        for (let currentChild: MarkdownNode of this.children) {
+        for (let currentChild of this.children) {
+            // currentChild is MarkdownNode
             childrenOutput.push( currentChild.recursiveGraphvizNode() )
         }
 
@@ -68,7 +69,7 @@ class MarkdownNode {
     }
 
 
-    extractTextFromRemarkNodeType( input : RemarkNodeType ): ?string {
+    extractTextFromRemarkNodeType( input : RemarkNodeType ): (string | null | undefined) {
         let extractedText = input.children[0].value
 
         this.text = extractedText
@@ -76,7 +77,7 @@ class MarkdownNode {
     }
 
 
-    findParentAtLevel(ancestorLevel: number): ?MarkdownNode {
+    findParentAtLevel(ancestorLevel: number): (MarkdownNode | null | undefined) {
         if (ancestorLevel == 0) {
             return this.parent
         } else {
@@ -106,7 +107,8 @@ class MarkdownNode {
 
         let currentParent : MarkdownNode = root
 
-        for (let current: RemarkNodeType of thingsIn) {
+        for (let current of thingsIn) {
+            // current is a RemarkNodeType
             // TODO: ewww
 
             if (current.type == "heading") {
@@ -123,10 +125,7 @@ class MarkdownNode {
                 // went from a H1 -> H2
                 if (current.depth > depthParentExpectsTheirChildrenToBe) {
 
-                    currentParent = ( (R.last(currentParent.children) : any) : MarkdownNode )
-                    // ^^ while technically the compiler is correct here ignore this for now
-                    // only way this could actually happen is people giving markdown that just doesn't make sense
-                    // structually. Deal with that problem later. WD-rpw 01/01/2021
+                    currentParent = R.last(currentParent.children)
 
                     transformed.parent = currentParent
 

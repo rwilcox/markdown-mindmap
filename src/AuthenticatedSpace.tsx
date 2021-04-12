@@ -23,21 +23,19 @@ class AuthenticatedSpace extends Component< {}, State > {
 
     constructor(props: any) {
         super(props)
-
-
     }
 
 
     componentDidMount() {
         // can't call setState until component is mounted
-        Auth.currentUserInfo().then( (currUser: Object) => {
+        Auth.currentUserInfo().then( (currUser: User) => {
             this.setState( {'currentUser': currUser, ready: true } )
         })
     }
 
 
-    render(): Node {
-        let output : Node
+    render(): React.ReactNode {
+        let output : React.ReactNode
         if (this.state.ready) {
             output = <div>
                 <p>{ `Hello, ${this.state.currentUser.username}` }</p>

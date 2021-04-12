@@ -1,19 +1,17 @@
 
 import React, { Component } from 'react'
-import type { Node } from 'react'
 
 type SafeGraphVizRenderState = {
-    errorMessage: ?string
+    errorMessage?: string
 }
 
 type Props = {
-  children?: Node,
+  children?: React.ReactNode,
 };
 
 type GraphVizError = (Error | string) // errors from graphviz-react can be just strings. ARRGHH
 
 class SafeGraphvizRender extends Component< Props, SafeGraphVizRenderState > {
-    dotString: string
     state : SafeGraphVizRenderState = {
         errorMessage: ""
     }
@@ -43,14 +41,14 @@ class SafeGraphvizRender extends Component< Props, SafeGraphVizRenderState > {
     }
 
 
-    render() : Node {
+    render() {
         if (this.state.errorMessage) {
             if (this.state.errorMessage.length > 0) {
                 return <p>{this.state.errorMessage}</p>
             }
         }
 
-        let output : Node
+        let output
 
         if ( this.props.children ) {
             output =  this.props.children

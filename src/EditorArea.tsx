@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import type { Ref, Node } from 'react'
 
 import { Graphviz } from 'graphviz-react'
 import SafeGraphvizRender from './SafeGraphvizRender'
@@ -8,15 +7,10 @@ import type { RemarkNodeType } from './models/RemarkNodeType'
 import MarkdownNode from './models/MarkdownNode'
 
 const remark = require('remark')
-const R      = require('ramda')
-
-// import './App.css';
-// TODO: figure out how to make Babel process .css files
 
 type State = {
     graphvizStr : string
 }
-
 
 
 class EditorArea extends Component< {}, State> {
@@ -42,7 +36,7 @@ class EditorArea extends Component< {}, State> {
     // use this oddball declaration style because I want to preserve this binding
     // at the point of function creation (vs using _.bind at runtime).
     // apparently this is the cool new way even though it harshes my vibe.
-    _transferGraphvizTextToState = (evt: SyntheticEvent<HTMLButtonElement>) => {
+    _transferGraphvizTextToState = (evt:  React.SyntheticEvent) => {
         if (this.graphvizTextArea !== null) {
             if (this.graphvizTextArea.current !== null) {
                 let dot = this.graphvizTextArea.current.value
@@ -54,7 +48,7 @@ class EditorArea extends Component< {}, State> {
     }
 
 
-    _generateGraphFromMarkdown = (evt: SyntheticEvent<HTMLButtonElement>) => {
+    _generateGraphFromMarkdown = (evt: React.SyntheticEvent) => {
         if ( (this.markdownTextArea !== null) && (this.markdownTextArea.current !== null) ) {
             let markdownStr = this.markdownTextArea.current.value
 
@@ -73,19 +67,16 @@ class EditorArea extends Component< {}, State> {
             let validgraphViz = `digraph { \n ${generatedGraphStr} \n}`
             this.setState({graphvizStr: validgraphViz})
 
-            // $FlowIssue[incompatible-use]
-            this.graphvizTextArea.current.value = validgraphViz // TODO: ugh is this right?
+            if (this.graphvizTextArea.current) {
+               this.graphvizTextArea.current.value = validgraphViz // TODO: ugh is this right?
+            }
         }
 
     }
 
-    // <header className="App-header">
-    //  <p>Edit <code>src/App.js</code> and save to reload.</p>
-    // </header>
-
 
     _getWidthForGraphvizRender = () => {
-        if (this.graphvizDisplayArea && this.graphvizDisplayArea.current) {
+        if (this.graphvizDisplayArea && (this.graphvizDisplayArea.current !== null) ) {
             let graphvizArea = this.graphvizDisplayArea.current.clientWidth
 
             return graphvizArea
@@ -94,21 +85,20 @@ class EditorArea extends Component< {}, State> {
     }
 
 
-    render() : Node {
-        let graphvizArea = 0
+    render() {
         return (
             <div className="App">
 
                 <div style={{height: '20em'}}>
                   <div style={{float: "left", width: '50%'}}>
                     <h1>Markdown</h1>
-                    <textarea ref={this.markdownTextArea} cols="80" style={{height: "15em"}}></textarea>
-                    <button onClick={this._generateGraphFromMarkdown} style={{display: 'block'}}>MMD -> DOT</button>
+                    <textarea ref={this.markdownTextArea} cols={80} style={{height: "15em"}}></textarea>
+                    <button onClick={this._generateGraphFromMarkdown} style={{display: 'block'}}>MMD `&gt;` DOT</button>
                   </div>
                 <div style={{float: 'right', width: '49%'}}>
                        <h1>Graphviz "dot" language</h1>
                        <textarea ref={this.graphvizTextArea}
-                                        id="graphviz-input" cols="80" style={{height: "15em"}}
+                                        id="graphviz-input" cols={80} style={{height: "15em"}}
                                         >{this.state.graphvizStr}</textarea>
                        <button onClick={this._transferGraphvizTextToState} style={{display: 'block'}}>Render</button>
                   </div>

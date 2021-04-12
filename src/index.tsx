@@ -30,7 +30,5 @@ ReactDOM.render(
     <AuthSpace />
 
   </React.StrictMode>,
-    ( ( document.getElementById('root') : any ): HTMLElement )
-    // force bad type checking for ease of development. This potential runtime error is fine
-    // WD-rpw 12/28/2020
-);
+   document.getElementById('root')
+)
