@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 class Header extends Component< {}, {} > {
     render(): Node {
         return  <section>
-                <details style={{marginLeft: '2em', marginTop: '0.5em', backgroundColor: 'cornsilk', marginRight: '2em'}}>
+                <details open="true" style={{marginLeft: '2em', marginTop: '0.5em', backgroundColor: 'cornsilk', marginRight: '2em'}}>
                   <summary>About markdown mindmapper</summary>
                 <p>This writer tool is to help you translate outlines into mind maps</p>
                 <p>I like to look at my writing in several ways: I may start with an outline but want
