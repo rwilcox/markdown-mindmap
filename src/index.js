@@ -6,19 +6,24 @@ import './index.css';
 import App from './App';
 import Header from './Header'
 
+function userAuthenticatedSpace() {
+    return withAuthenticator( App, )
+}
+
 Amplify.configure({
   Auth: {
     userPoolId: 'us-east-1_7SwoAY02u', // TODO: replace this with env variable
     region: 'us-east-1',
-    userPoolWebClientId: '73pp6kcka3e4vt1cnt6plporge' //TODO: replace this with env variable
+    userPoolWebClientId: '5cmu7esaum79r2h9u95piqa3tv' //TODO: replace this with env variable
   }
 })
 
+const AuthSpace = userAuthenticatedSpace()
+
 ReactDOM.render(
   <React.StrictMode>
-        <Header />
-        <AmplifyAuthenticator />
-  // <App />
+      <Header />
+      <AuthSpace />
   </React.StrictMode>,
     ( ( document.getElementById('root') : any ): HTMLElement )
     // force bad type checking for ease of development. This potential runtime error is fine
