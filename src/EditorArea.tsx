@@ -9,13 +9,15 @@ import MarkdownNode from './models/MarkdownNode'
 const remark = require('remark')
 
 type State = {
-    graphvizStr : string
+    graphvizStr : string,
+    graphOrient : string
 }
 
 
 class EditorArea extends Component< {}, State> {
     state : State = {
-        graphvizStr: `graph { "hi" }`
+        graphvizStr: `graph { "hi" }`,
+        graphOrient: "TB"
     }
 
     graphvizTextArea : { current: null | HTMLTextAreaElement }  // WTF : https://stackoverflow.com/q/50076176/224334
@@ -64,7 +66,7 @@ class EditorArea extends Component< {}, State> {
             let generatedGraphStr = output.recursiveGraphvizNode()
             //console.dir( markdownAST )
 
-            let validgraphViz = `digraph { \n ${generatedGraphStr} \n}`
+            let validgraphViz = `digraph { \n rankdir=${this.state.graphOrient}\n ${generatedGraphStr} \n}`
             this.setState({graphvizStr: validgraphViz})
 
             if (this.graphvizTextArea.current) {
@@ -85,6 +87,17 @@ class EditorArea extends Component< {}, State> {
     }
 
 
+
+    _toggleGraphOrient = () => {
+       let graphState = this.state.graphOrient
+       if (graphState === "LR") {
+          this.setState( {graphOrient: "TB"} )
+       } else {
+          this.setState( {graphOrient: "LR"} )
+       }
+    }
+
+
     render() {
         return (
             <div className="App">
@@ -94,6 +107,7 @@ class EditorArea extends Component< {}, State> {
                     <h1>Markdown</h1>
                     <textarea ref={this.markdownTextArea} cols={80} style={{height: "15em"}}></textarea>
                     <button onClick={this._generateGraphFromMarkdown} style={{display: 'block'}}>MMD `&gt;` DOT</button>
+                    <input id="graphOrient" type="checkbox" onClick={this._toggleGraphOrient}/><label htmlFor="graphOrient">Left to Right Orientatation</label>
                   </div>
                 <div style={{float: 'right', width: '49%'}}>
                        <h1>Graphviz "dot" language</h1>
