@@ -8,11 +8,12 @@ phases:
       ruby: latest
   build:
     commands:
-      - yarn install
+      - bash build-scripts/pre-build.sh
       - bash build-scripts/test.sh
-      - npm run build
+      - bash build-scripts/package.sh
 
 artifacts:
   files:
     - '**/*'
-  base-directory: 'build'
+  base-directory: 'modules/frontend/build'
+# TODO: use secondary artifacts

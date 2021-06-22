@@ -1,3 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-npm run tsc && npm test -- --ci
+set -e
+
+pushd modules/frontend/
+build-scripts/test.sh && true
+popd
