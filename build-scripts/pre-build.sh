@@ -7,3 +7,7 @@ set -e
 pushd modules/frontend
 bash build-scripts/pre-build.sh && true
 popd
+
+pushd modules/infrastructure
+bash build-scripts/pre-build.sh && true
+popd

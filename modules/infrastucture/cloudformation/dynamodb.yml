@@ -1,0 +1,24 @@
+Parameters:
+  Environment:
+    Type: String
+    Description: "is it local-dev-rpw or dev or prod?"
+
+Resources:
+  Database:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "DocumentId"
+          AttributeType: "S"
+        - AttributeName: "UserId"
+          AttributeType: "S"
+      BillingMode: "PAY_PER_REQUEST"
+      KeySchema:
+        - AttributeName: "DocumentId"
+          KeyType: "HASH"
+        - AttributeName: "UserId"
+          KeyType: "RANGE"
+      TableName: !Sub markdown-mindmap-${Environment}-documents
+      Tags:
+        - Key: "PROJECT"
+          Value: "markdown-map"

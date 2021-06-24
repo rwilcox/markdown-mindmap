@@ -7,3 +7,7 @@ set -e
 pushd modules/frontend/
 bash build-scripts/package.sh
 popd
+
+pushd modules/infrastructure/
+bash build-scripts/package.sh
+popd
