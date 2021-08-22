@@ -22,3 +22,5 @@ Resources:
       Tags:
         - Key: "PROJECT"
           Value: "markdown-map"
+
+# remember dynamodb is schema-less, so it only wants attribute in the key!
