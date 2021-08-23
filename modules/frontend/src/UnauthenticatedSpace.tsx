@@ -8,13 +8,13 @@ type State = {
     annonEditor : boolean
 }
 
-class UnauthenticatedSpace extends Component<{}, State> {
+class UnauthenticatedSpace extends Component<{onAuthenticated: (b: boolean) => void}, State> {
     state : State = {
         show: true,
         annonEditor: false
     }
 
-    constructor(props : {}) {
+    constructor(props : {onAuthenticated: (b: boolean) => void}) {
         super(props)
 
         Hub.listen('auth', (data) => {
@@ -30,6 +30,7 @@ class UnauthenticatedSpace extends Component<{}, State> {
 
 
     _showAnonEditor = (evt: React.SyntheticEvent) => {
+        this.props.onAuthenticated(this.state.annonEditor)
         this.setState( {annonEditor: !this.state.annonEditor} )
     }
 

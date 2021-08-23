@@ -23,12 +23,30 @@ Amplify.configure({
 
 const AuthSpace = userAuthenticatedSpace()
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Header />
-    <UnauthenticatedSpace />
-    <AuthSpace />
+type State = {
+  inUnauthSpace: boolean
+}
 
-  </React.StrictMode>,
+class App extends React.Component {
+    state : State = {
+        inUnauthSpace : true
+    }
+
+    _handleUnauthToggled = (unauthStatus: boolean) => {
+      this.setState( {inUnauthSpace: unauthStatus} )
+    }
+
+    render() {
+      return <React.StrictMode>
+    <Header />
+    <UnauthenticatedSpace onAuthenticated={this._handleUnauthToggled} />
+    { this.state.inUnauthSpace ? <AuthSpace /> : <span></span> }
+
+  </React.StrictMode>
+    }
+}
+
+ReactDOM.render(
+   <App />,
    document.getElementById('root')
 )
