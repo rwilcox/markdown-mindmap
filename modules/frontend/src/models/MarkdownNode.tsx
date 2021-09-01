@@ -63,7 +63,8 @@ class MarkdownNode {
 
     // returns a unique but not too foreign looking node ID for GraphViz
     get graphvizNodeName(): string {
-        let ourText = ( this.text || "" ).slice().replace(/ /g, "_" ) // replaceAll is in ECMAScript 2021
+        let targetStr = ( this.text || "" ).slice()
+        let ourText = targetStr.replace(/\W/g, "_" )    // Replace any punctuation. Also: replaceAll is in ECMAScript 2021
 
         return `${ourText}_${this.depth}`  // TODO: might not be unique enough if we have "hello world" all on level 2s
     }
