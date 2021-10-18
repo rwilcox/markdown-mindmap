@@ -20,4 +20,4 @@ Set up various AWS infrastucture pieces.
 
 # See this deployed
 
-  * [dev environment](markdown-map-beta.wilcoxd.com/)
+  * [dev environment](http://markdown-map-beta.wilcoxd.com/)
