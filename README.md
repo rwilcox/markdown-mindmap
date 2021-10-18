@@ -16,3 +16,8 @@ React and Typescript
 ### infrastucture
 
 Set up various AWS infrastucture pieces.
+
+
+# See this deployed
+
+  * [dev environment](markdown-map-beta.wilcoxd.com/)
