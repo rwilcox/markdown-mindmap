@@ -6,7 +6,11 @@ import SafeGraphvizRender from './SafeGraphvizRender'
 import type { RemarkNodeType } from './models/RemarkNodeType'
 import MarkdownNode from './models/MarkdownNode'
 
+import Document from './models/Document'
+
 import { ReactCodeJar } from "react-codejar";
+
+//import { nullCast } from "./utils"
 
 const remark = require('remark')
 type State = {
@@ -14,10 +18,15 @@ type State = {
     graphOrient : string,
     markdownStr : string,
     draftGraphvizStr: string
+    documentName: string
 }
 
+type Props = {
+  isUserAuthed? : boolean,
+  handleSave? : (d: Document) => void
+}
 
-class EditorArea extends Component< {}, State> {
+class EditorArea extends Component< Props, State> {
     state : State = {
         graphvizStr: `graph { "hi" }`,
         draftGraphvizStr: `graph { "hi" }`,
@@ -26,17 +35,23 @@ class EditorArea extends Component< {}, State> {
         // WD-rpw 08/22/2021
 
         graphOrient: "TB",
-        markdownStr: `# hi`
+        markdownStr: `# hi`,
+        documentName: ""
     }
 
     safeGraphViz     : { current: null | SafeGraphvizRender }
     graphvizDisplayArea : { current: null | HTMLDivElement }
+    documentNameRef? : { current: null | HTMLInputElement }
 
-    constructor(props: any) {
+    constructor(props: Props) {
         super(props)
 
         this.safeGraphViz     = React.createRef()
         this.graphvizDisplayArea = React.createRef()
+
+        if (props.isUserAuthed) {
+           this.documentNameRef = React.createRef()
+        }
     }
 
 
@@ -46,6 +61,17 @@ class EditorArea extends Component< {}, State> {
     _transferGraphvizTextToState = (evt:  React.SyntheticEvent) => {
         this.setState( { graphvizStr: this.state.draftGraphvizStr} )
         if ( this.safeGraphViz.current ) this.safeGraphViz.current.resetError()
+    }
+
+
+    _handleSaveButtonClicked = (evt: React.SyntheticEvent) => {
+      let ourDocument = new Document()
+      ourDocument.markdownText =  this.state.markdownStr
+      ourDocument.title = this.state.documentName
+
+      if (this.props.handleSave) {
+            this.props.handleSave(ourDocument)
+      }
     }
 
 
@@ -80,7 +106,6 @@ class EditorArea extends Component< {}, State> {
     }
 
 
-
     _toggleGraphOrient = () => {
        let graphState = this.state.graphOrient
        if (graphState === "LR") {
@@ -110,10 +135,20 @@ class EditorArea extends Component< {}, State> {
                               onUpdate={ (x) => {this.setState({draftGraphvizStr: x})} }
                               style={editorStyling} />
 
+        let userSaveForm = <div style={{paddingTop: "1em"}}>
+                             <label>Document Name: </label>
+                             <input ref={this.documentNameRef} type="text" onInput={(x) => {
+                                    const name = this.documentNameRef?.current ? this.documentNameRef.current.value : ""
+                                    this.setState({documentName: name})
+                                 }}
+                             ></input>
+                             <button onClick={this._handleSaveButtonClicked}>Save</button>
+                           </div>
         return (
             <div className="App">
 
                 <div style={{height: '20em'}}>
+                  {this.props.isUserAuthed ? userSaveForm : <span></span>}
                   <div style={{float: "left", width: '50%'}}>
                     <h1>Markdown</h1>
                     <div>{markdownTextArea}</div>
