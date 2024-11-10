@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+a {
+    color: blue;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.yozora-code-renderer-graphviz svg {
+    border: thin solid black
+}
+
+/*
+    just make (most) buttons look like buttons, not stylized multi-platform garbage
+    WD-rpw 10-28-2024
+*/
+button.nativeBtn {
+    all: revert
+}

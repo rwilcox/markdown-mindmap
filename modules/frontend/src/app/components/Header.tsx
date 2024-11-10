@@ -1,7 +1,5 @@
-import { Component } from 'react'
 
-class Header extends Component<{}, {}> {
-    render() {
+export function Header() {
         return  <section>
                 <details open={true} style={{marginLeft: '2em', marginTop: '0.5em', backgroundColor: 'cornsilk', marginRight: '2em'}}>
                   <summary>About markdown mindmapper</summary>
@@ -18,7 +16,3 @@ class Header extends Component<{}, {}> {
             </section>
 
     }
-
-}
-
-export default Header

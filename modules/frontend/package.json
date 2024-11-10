@@ -1,57 +1,36 @@
 {
-  "name": "markdown-mindmap",
+  "name": "frontend-next",
   "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/preset-react": "^7.12.10",
-    "@babel/preset-typescript": "^7.13.0",
-    "@types/react": "^17.0.9",
-    "babel-jest": "^26.6.3"
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@aws-amplify/ui-react": "^1.0.6",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "@types/node": "^14.14.37",
-    "@types/react-dom": "^17.0.3",
-    "aws-amplify": "^3.3.26",
-    "graphviz-react": "^1.1.1",
-    "ramda": "^0.27.1",
-    "react": "^17.0.1",
-    "react-codejar": "^1.1.2",
-    "react-dom": "^17.0.1",
-    "react-scripts": "4.0.1",
-    "remark": "^13.0.0",
-    "typescript": "^4.2.4",
-    "web-vitals": "^0.2.4"
+    "@aws-amplify/ui-react": "^6.5.3",
+    "@monaco-editor/react": "^4.6.0",
+    "@yozora/react-code-renderer-graphviz": "^3.0.0-alpha.11",
+    "aws-amplify": "^6.6.4",
+    "next": "14.2.15",
+    "ramda": "^0.30.1",
+    "react": "^18",
+    "react-dom": "^18",
+    "remark": "^15.0.1"
   },
-  "scripts": {
-    "start": "react-scripts --max_old_space_size=4096 start",
-    "build": "react-scripts --max_old_space_size=4096 build",
-    "test": "node --unhandled-rejections=strict node_modules/.bin/jest --no-color --runInBand",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
-    "eject": "react-scripts eject",
-    "tsc": "tsc"
+  "engines": {
+    "node": "20"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.15",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "packageManager": "yarn@4.5.1"
 }
