@@ -2,6 +2,15 @@ version: 1
 name: markdown-mindmap
 
 tasks:
+  frontend:test:
+    shell: |
+      cd modules/frontend
+      # npm run lint
+      # TODO: turn on lint + tests
+  frontend:ci:package:
+    shell: |
+      cd modules/frontend
+      npm run build
   frontend:start_app:
     description: soon will be how to launch the frontend
     shell: |
