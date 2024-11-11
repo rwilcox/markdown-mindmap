@@ -2,11 +2,8 @@
 
 set -e
 
-# TODO: do this dynamically...
-
-pushd modules/frontend/
-bash build-scripts/package.sh
-popd
+NET_TASK_BIN=/tmp/net-task
+$NET_TASK_BIN run frontend:ci:package
 
 pushd modules/infrastructure/
 bash build-scripts/package.sh

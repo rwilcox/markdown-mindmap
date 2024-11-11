@@ -3,10 +3,9 @@
 set -e
 
 # TODO: someday make this discovery automatic..
+NET_TASK_BIN=/tmp/net-task
 
-pushd modules/frontend
-bash build-scripts/pre-build.sh && true
-popd
+$NET_TASK_BIN run frontend:install
 
 pushd modules/infrastructure
 bash build-scripts/pre-build.sh && true

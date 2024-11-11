@@ -11,12 +11,11 @@ This is a monorepo containing frontend, infrastucture as code, backend, etc.
 
 ### frontend
 
-React and Typescript
+Next.js, React and Typescript
 
 ### infrastucture
 
 Set up various AWS infrastucture pieces.
-
 
 # See this deployed
 

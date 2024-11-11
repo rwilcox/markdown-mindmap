@@ -1,0 +1,33 @@
+version: 1
+name: markdown-mindmap
+
+tasks:
+  frontend:test:
+    shell: |
+      cd modules/frontend
+      # npm run lint
+      # TODO: turn on lint + tests
+  frontend:lint:
+    shell: |
+      cd modules/frontend
+      npm run lint
+  all:ci:start:
+    description: force a CI build in the current branch
+    os: unix
+    shell: bundle exec cody start --branch=$(git branch --show-current)
+  frontend:ci:package:
+    shell: |
+      cd modules/frontend
+      npm run build
+  frontend:start_app:
+    description: soon will be how to launch the frontend
+    shell: |
+      cd modules/frontend/
+      npm run dev
+  frontend:install:
+    description: could be named install_dependencies. Sets up corepack etc
+    os: unix
+    shell: |
+      cd modules/frontend/
+      yes | npx corepack install # prompts the user, blergh
+      npx corepack yarn install

@@ -8,6 +8,8 @@ phases:
       ruby: latest
   build:
     commands:
+      - curl -o /tmp/net-task.tar.gz -L https://github.com/rwilcox/net-task/releases/download/0.1.1/net-task_0.1.0_Linux_x86_64.tar.gz
+      - cd /tmp/; tar -xvzf net-task.tar.gz; cd -
       - bash build-scripts/pre-build.sh
       - bash build-scripts/test.sh
       - bash build-scripts/package.sh
@@ -15,5 +17,5 @@ phases:
 artifacts:
   files:
     - '**/*'
-  base-directory: 'modules/frontend/build'
+  base-directory: 'modules/frontend/out'
 # TODO: use secondary artifacts
