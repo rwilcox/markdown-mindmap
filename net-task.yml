@@ -7,6 +7,10 @@ tasks:
       cd modules/frontend
       # npm run lint
       # TODO: turn on lint + tests
+  all:ci:start:
+    description: force a CI build in the current branch
+    os: unix
+    shell: bundle exec cody start --branch=$(git branch --show-current)
   frontend:ci:package:
     shell: |
       cd modules/frontend
