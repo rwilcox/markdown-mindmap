@@ -1,14 +1,9 @@
-export enum Env {
-       Beta = "-beta",
-       Dev = "-dev",
-       Staging = "-staging",
-       Prod = ""
-}
-
+import { Env } from '@/config'
 export class Document {
   markdownText: string = ""
+  graphvizText: string = ""
   title: string = ""
-  currentEnv: Env
+  currentEnv: Env = Env.Beta
 
   public static async getDocuments(idToken: string, env: Env) {
     const res = await fetch(`https://api.markdown-map${env}.wilcoxd.com/rest/documents/v1/`, {

@@ -2,10 +2,10 @@
 
 import { useState } from 'react'
 import { Amplify } from 'aws-amplify'
-import { getConfig } from "@/config"
-import { Env, Document } from "@/models/Document"
+import { Env, getConfig } from "@/config"
+import { Document } from "@/models/Document"
 
-import { Authentication } from './authentication'
+import { Authentication, SigninInfo } from './authentication'
 import { Editor } from './Editor'
 
 Amplify.configure({
@@ -25,7 +25,7 @@ export function Dynamic() {
   const [showAuthentication, setShowAuthentication] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [showAnonToggle, setShowAnonToggle] = useState(true)
-  const [accessToken, setAccessToken] = useState(null)
+  const [accessToken, setAccessToken] = useState<string | null>(null)
   const [showEditor, setShowEditor] = useState(false)
   const [email, setEmail] = useState("")
 
@@ -34,11 +34,14 @@ export function Dynamic() {
     setShowEditor(!showEditor)
   }
 
-  function handleSignin({email, jwt}) {
-    if (!isAuthenticated) {
-      // access vs id tokens
-      // https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-client-apps.html#user-pool-settings-client-app-token-types
-      setAccessToken(jwt?.idToken?.toString()) // you want the ID token!!! not .accessToken! WD-rpw 11-08-2024
+  function handleSignin({email, tokens}: SigninInfo) {
+    // access vs id tokens
+    // https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-client-apps.html#user-pool-settings-client-app-token-types
+    // you want the ID token!!! not .accessToken! WD-rpw 11-08-2024
+    const accessJWT = tokens?.idToken
+
+    if (!isAuthenticated && accessJWT) {
+      setAccessToken(accessJWT.toString() ?? "INVALID")
 
       setShowEditor(true)
       setShowAuthentication(false)
@@ -58,9 +61,11 @@ export function Dynamic() {
   }
 
   async function handleListDocuments() {
-    const documents = await Document.getDocuments(accessToken, Env.Beta)
-    // TODO: show clever interface
-    console.log(documents)
+    if (accessToken) {
+      const documents = await Document.getDocuments(accessToken!, Env.Beta)
+      // TODO: show clever interface
+      console.log(documents)
+    }
   }
 
   function displayDocumentList() {
@@ -72,13 +77,16 @@ export function Dynamic() {
   }
 
   async function handleDocumentSave(mStr: string, gvStr: string) {
-    const currentDocument = new Document()
-    currentDocument.currentEnv = Env.Beta  // TODO: use correct env
-    currentDocument.markdownText = mStr
-    currentDocument.title = "From Next" // TODO: use actual title
-    const res = await currentDocument.saveDocument(accessToken)
+    if (accessToken) {
+      const currentDocument = new Document()
+      currentDocument.currentEnv = Env.Beta  // TODO: use correct env
+      currentDocument.markdownText = mStr
+      currentDocument.graphvizText = gvStr
+      currentDocument.title = "From Next" // TODO: use actual title
+      const res = await currentDocument.saveDocument(accessToken!)
 
-    console.log(res)
+      console.log(res)
+    }
   }
 
   return (

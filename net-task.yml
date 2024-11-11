@@ -7,6 +7,10 @@ tasks:
       cd modules/frontend
       # npm run lint
       # TODO: turn on lint + tests
+  frontend:lint:
+    shell: |
+      cd modules/frontend
+      npm run lint
   all:ci:start:
     description: force a CI build in the current branch
     os: unix

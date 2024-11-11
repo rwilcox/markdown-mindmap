@@ -5,10 +5,18 @@
 export function getConfig(key: string): string {
   // TODO: actually make the unified system
 
-  const betaSettings = {
+  const betaSettings : {[key: string]: string} = {
     AMPLIFY_USERPOOL_ID: "us-east-1_7SwoAY02u",
     AMPLIFY_WEBCLIENT_ID: "5cmu7esaum79r2h9u95piqa3tv"
   }
 
-  return betaSettings[key]
+  const res = betaSettings[key]
+  return res
+}
+
+export enum Env {
+       Beta = "-beta",
+       Dev = "-dev",
+       Staging = "-staging",
+       Prod = ""
 }

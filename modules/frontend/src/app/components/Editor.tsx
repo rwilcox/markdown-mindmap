@@ -18,10 +18,10 @@ export function Editor(props: EditorProps) {
     hi
   }
  `
-  const [graphvizCode, setGraphVizCode]         = useState(code)            // value of the graphviz editor
-  const [graphvizText, setGraphvizText]         = useState(code)            // text behind the graphviz RENDER
-  const [error, setError]                       = useState<any>(null)       // graphviz compliation errors
-  const [markdownText, setMarkdownText]         = useState("My document")   // markdown
+  const [graphvizCode, setGraphVizCode]         = useState(code)                               // value of the graphviz editor
+  const [graphvizText, setGraphvizText]         = useState(code)                               // text behind the graphviz RENDER
+  const [error, setError]                       = useState<string | null>(null)                // graphviz compliation errors
+  const [markdownText, setMarkdownText]         = useState<string | undefined>("My document")  // markdown
   const [graphOrientation, setGraphOrientation] = useState("TB")
 
   const editorOptions = {
@@ -76,7 +76,7 @@ export function Editor(props: EditorProps) {
   }
 
   function handleTogglegraphOrient() {
-    let graphState = graphOrientation
+    const graphState = graphOrientation
        if (graphState === "LR") {
           setGraphOrientation("TB")
        } else {
@@ -85,8 +85,8 @@ export function Editor(props: EditorProps) {
   }
 
   function handleSave() {
-    if (props.handleSave) {
-      props.handleSave(markdownText, graphvizCode)
+    if (props.handleSave && markdownText) {
+      props.handleSave(markdownText!, graphvizCode)
     }
   }
 
@@ -118,7 +118,7 @@ export function Editor(props: EditorProps) {
             </div>
           </div>
           <div className="col-span-1" style={{border: "thin black solid"}}>
-            <h1>Graphviz "dot" language</h1>
+            <h1>Graphviz &quot;dot&quot; language</h1>
             <MonacoEditor
               defaultValue={graphvizText}
               onChange={handleGraphvizTextChange}

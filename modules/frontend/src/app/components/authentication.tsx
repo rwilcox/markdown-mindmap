@@ -1,26 +1,27 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Amplify } from 'aws-amplify'
-import { signOut, fetchUserAttributes, fetchAuthSession } from 'aws-amplify/auth'
+
+import { signOut, fetchUserAttributes, fetchAuthSession, JWT } from 'aws-amplify/auth'
 import { Hub } from 'aws-amplify/utils'
 import { Authenticator } from '@aws-amplify/ui-react'
-import { getConfig } from "@/config"
+
 
 import '@aws-amplify/ui-react/styles.css';
 
 export type SigninInfo = {
   email: string;
-  token: string[];
+  tokens?: {idToken?: JWT, accessToken?: JWT };
 }
 
 export type AuthenticationProps = {
-  onSignIn: (SigninInfo) => void;
+  onSignIn: (arg0: SigninInfo) => void;
   onSignOut: () => void;
   showAuthPanel: boolean
 }
 
 export function Authentication(props: AuthenticationProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userEmail, setUserEmail] = useState('')
 
   const handleSignout = async () => {
@@ -37,9 +38,9 @@ export function Authentication(props: AuthenticationProps) {
     const attributes = await fetchUserAttributes()
     const sessionInfo = await fetchAuthSession()
 
-    setUserEmail(attributes.email)
+    setUserEmail(attributes.email ?? "")
 
-    if (props.onSignIn) { props.onSignIn({email: (attributes.email ?? null), jwt: sessionInfo.tokens}) }
+    if (props.onSignIn) { props.onSignIn({email: (attributes.email ?? ""), tokens: sessionInfo.tokens}) }
   }
 
   useEffect( () => {
