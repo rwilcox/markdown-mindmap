@@ -17,7 +17,6 @@ Next.js, React and Typescript
 
 Set up various AWS infrastucture pieces.
 
-
 # See this deployed
 
   * [dev environment](http://markdown-map-beta.wilcoxd.com/)
