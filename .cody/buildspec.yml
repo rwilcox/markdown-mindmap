@@ -17,5 +17,5 @@ phases:
 artifacts:
   files:
     - '**/*'
-  base-directory: 'modules/frontend/build'
+  base-directory: 'modules/frontend/out'
 # TODO: use secondary artifacts
