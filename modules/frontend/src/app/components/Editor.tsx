@@ -6,11 +6,21 @@ import { GraphvizRenderer } from '@yozora/react-code-renderer-graphviz'
 import MonacoEditor from '@monaco-editor/react'
 import { remark } from 'remark'
 
+import { displayIfTrue } from '@/utils/displayIfTrue'
 import MarkdownNode from '@/models/MarkdownNode'
 
 export type EditorProps = {
   isAuthenticated: boolean;
   handleSave: (markdownStr: string, graphvizStr: string) => void
+}
+
+
+export function displayRenderedGraphImpl({graphvizCode, setError}): JSX.Element {
+  return <GraphvizRenderer code={graphvizCode} onError={setError} options={{zoom: true, fit: false}}/>
+}
+
+export function displaySaveButtonImpl({handleSave}): JSX.Element {
+  return <button style={{marginLeft: "3em"}} className="nativeBtn" onClick={handleSave}>Save</button>
 }
 
 export function Editor(props: EditorProps) {
@@ -48,21 +58,8 @@ export function Editor(props: EditorProps) {
     setGraphvizText(validGraphviz)
   }
 
-  function displayRenderedGraph(): JSX.Element {
-    if (error) {
-      return <span></span>
-    } else {
-      return <GraphvizRenderer code={graphvizCode} onError={setError} options={{zoom: true, fit: false}}/>
-    }
-  }
-
-  function displaySaveButton(): JSX.Element {
-    if (props.isAuthenticated) {
-      return <button style={{marginLeft: "3em"}} className="nativeBtn" onClick={handleSave}>Save</button>
-    } else {
-      return <span></span>
-    }
-  }
+  const displayRenderedGraph = displayIfTrue(displayRenderedGraphImpl)
+  const displaySaveButton    = displayIfTrue(displaySaveButtonImpl)
 
   function displayDocumentTitle(): JSX.Element {
     if (props.isAuthenticated) {
@@ -130,9 +127,9 @@ export function Editor(props: EditorProps) {
         </div> { /* end row of editors */ }
         <div>
           <button className="nativeBtn" onClick={handleRenderGraphviz}>Render!</button>
-          {displaySaveButton()}
+          {displaySaveButton({handleSave}, props.isAuthenticated)}
           <pre>{error}</pre>
-          {displayRenderedGraph()}
+          {displayRenderedGraph({graphvizCode, setError}, !error)}
         </div> { /* end row of renders */ }
       </div> { /* end grid */ }
   </div>)
