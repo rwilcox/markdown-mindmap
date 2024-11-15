@@ -60,17 +60,12 @@ export function Editor(props: EditorProps) {
 
   const displayRenderedGraph = displayIfTrue(displayRenderedGraphImpl)
   const displaySaveButton    = displayIfTrue(displaySaveButtonImpl)
-
-  function displayDocumentTitle(): JSX.Element {
-    if (props.isAuthenticated) {
-      return (<div>
-        <label htmlFor="documentName">Document Name</label>
-                <input id="documentName" type="text" style={{border: "thin black solid"}}/>
-             </div>)
-    } else {
-      return <span></span>
-    }
-  }
+  const displayDocumentTitle = displayIfTrue( () => {
+    return (<div>
+              <label htmlFor="documentName">Document Name</label>
+              <input id="documentName" type="text" style={{border: "thin black solid"}}/>
+            </div>)
+  })
 
   function handleTogglegraphOrient() {
     const graphState = graphOrientation
@@ -89,7 +84,7 @@ export function Editor(props: EditorProps) {
 
   return (
     <div>
-      {displayDocumentTitle()}
+      {displayDocumentTitle({}, props.isAuthenticated)}
       <div className="grid grid-rows-3 gap-4">
         <div className="grid grid-cols-2"> { /* row of editors */ }
           <div className="col-span-1" style={{border: "thin black solid"}}>
