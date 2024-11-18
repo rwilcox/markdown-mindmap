@@ -64,11 +64,9 @@ export default function Dynamic( ) {
 
   async function handleDocumentSave(mStr: string, gvStr: string) {
     if (accessToken) {
-      const currentDocument = new Document()
-      currentDocument.currentEnv = Env.Beta  // TODO: use correct env
-      currentDocument.markdownText = mStr
-      currentDocument.graphvizText = gvStr
-      currentDocument.title = "From Next" // TODO: use actual title
+      const currentDocument = new Document(null, mStr, gvStr, "From Next", Env.Beta)
+      // TODO: use correct env
+      // TODO: use actual title
       const res = await currentDocument.saveDocument(accessToken!)
 
       console.log(res)
