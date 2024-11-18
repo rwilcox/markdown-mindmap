@@ -8,7 +8,7 @@ type DocumentResponse = {
 
 export class Document {
   constructor(
-    public document_id: string = "",
+    public document_id: string | null = "",
     public markdownText: string = "",
     public graphvizText: string = "",
     public title: string = "",
