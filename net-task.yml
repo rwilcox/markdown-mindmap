@@ -31,3 +31,6 @@ tasks:
       cd modules/frontend/
       yes | npx corepack install # prompts the user, blergh
       npx corepack yarn install
+  frontend:lint:
+    os: unix
+    shell: cd modules/frontend; npm run lint

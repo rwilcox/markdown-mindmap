@@ -4,8 +4,10 @@ import { useState } from 'react'
 import { Amplify } from 'aws-amplify'
 import { Env, getConfig } from "@/config"
 import { Document } from "@/models/Document"
+import { useRouter } from 'next/navigation'
 
-import { Authentication, SigninInfo } from './authentication'
+import { Authentication } from './authentication'
+import { SigninInfo } from './UserHeader'
 import { Editor } from './Editor'
 
 Amplify.configure({
@@ -21,27 +23,26 @@ Amplify.configure({
   Dynamic is the root component of all authenticated actions. It keeps track of all user state
   and passes information down to authentication using components if required.
 */
-export function Dynamic() {
+export function Dynamic( ) {
   const [showAuthentication, setShowAuthentication] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [showAnonToggle, setShowAnonToggle] = useState(true)
   const [accessToken, setAccessToken] = useState<string | null>(null)
   const [showEditor, setShowEditor] = useState(false)
-  const [email, setEmail] = useState("")
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_email, setEmail] = useState("")
 
   function handleToggleHideAuthentication() {
     setShowAuthentication(!showAuthentication)
     setShowEditor(!showEditor)
   }
 
-  function handleSignin({email, tokens}: SigninInfo) {
-    // access vs id tokens
-    // https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-client-apps.html#user-pool-settings-client-app-token-types
-    // you want the ID token!!! not .accessToken! WD-rpw 11-08-2024
-    const accessJWT = tokens?.idToken
+  function handleSignin({email, jwt}: SigninInfo) {
+    const accessJWT = jwt
 
     if (!isAuthenticated && accessJWT) {
-      setAccessToken(accessJWT.toString() ?? "INVALID")
+      setAccessToken(jwt ?? "INVALID")
 
       setShowEditor(true)
       setShowAuthentication(false)
@@ -60,21 +61,6 @@ export function Dynamic() {
     }
   }
 
-  async function handleListDocuments() {
-    if (accessToken) {
-      const documents = await Document.getDocuments(accessToken!, Env.Beta)
-      // TODO: show clever interface
-      console.log(documents)
-    }
-  }
-
-  function displayDocumentList() {
-      if (!isAuthenticated) { return <span></span> }
-
-      return <div className="mt-4">
-             <button className="nativeBtn" onClick={handleListDocuments}>List Documents</button>
-              </div>
-  }
 
   async function handleDocumentSave(mStr: string, gvStr: string) {
     if (accessToken) {
@@ -89,19 +75,24 @@ export function Dynamic() {
     }
   }
 
+  function handleDocuments() {
+    router.push("/documents")
+  }
+
+  const router = useRouter()
+
   return (
     <div>
         {showAnonToggle &&
           <button className="nativeBtn" onClick={handleToggleHideAuthentication}>Toggle Anonymous Mode</button>
         }
-        {isAuthenticated && <p>Welcome, {email}</p>}
         <Authentication
           onSignIn={handleSignin}
           onSignOut={handleSignout}
           showAuthPanel={showAuthentication || isAuthenticated}/>
         { /* auth panel could be the Cognito component or could be signout */ }
+        { isAuthenticated && <button className="nativeBtn"  onClick={handleDocuments}>List my documents</button> }
 
-        {displayDocumentList()}
         {showEditor && <div className="mt-4">
                          <Editor isAuthenticated={isAuthenticated} handleSave={handleDocumentSave}/>
                        </div>

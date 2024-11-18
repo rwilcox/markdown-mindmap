@@ -1,11 +1,21 @@
 import { Env } from '@/config'
-export class Document {
-  markdownText: string = ""
-  graphvizText: string = ""
-  title: string = ""
-  currentEnv: Env = Env.Beta
 
-  public static async getDocuments(idToken: string, env: Env) {
+type DocumentResponse = {
+  document_id: string;
+  markdownText: string;
+  title: string
+}
+
+export class Document {
+  constructor(
+    public document_id: string = "",
+    public markdownText: string = "",
+    public graphvizText: string = "",
+    public title: string = "",
+    public currentEnv: Env = Env.Beta) {}
+
+
+  public static async getDocuments(idToken: string, env: Env): Promise<Document[]> {
     const res = await fetch(`https://api.markdown-map${env}.wilcoxd.com/rest/documents/v1/`, {
       method: 'GET',
       headers: {
@@ -14,8 +24,13 @@ export class Document {
       }
     })
 
-    // TODO: unpack the results into Document objects including Base 64 de-conversion
-    return await res.json()
+    const rawDocs: {documents: DocumentResponse[]} = await res.json()
+    return rawDocs.documents.map( (rawDocument) => new Document(
+      rawDocument.document_id,
+      atob(rawDocument.markdownText),
+        "",
+      rawDocument.title,
+      env))
   }
 
   public async saveDocument(idToken: string) {

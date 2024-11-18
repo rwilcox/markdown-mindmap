@@ -1,8 +1,13 @@
+import { displayIfTrue } from '@/utils/displayIfTrue'
 
-export function Header() {
-        return  <section>
-                <details open={true} style={{marginLeft: '2em', marginTop: '0.5em', backgroundColor: 'cornsilk', marginRight: '2em'}}>
-                  <summary>About markdown mindmapper</summary>
+/*
+Keep me as a static component, as it contains the explaination (mostly)
+*/
+export function Header({hideExplaination}: {hideExplaination: boolean}) {
+  const displayExplaination = displayIfTrue(() => {
+    return  <section>
+              <details open={true} style={{marginLeft: '2em', marginTop: '0.5em', backgroundColor: 'cornsilk', marginRight: '2em'}}>
+                <summary>About markdown mindmapper</summary>
                 <p>This writer tool is to help you translate outlines into mind maps</p>
                 <p>I like to look at my writing in several ways: I may start with an outline but want
             to see it graphically in a mindmap.</p>
@@ -14,5 +19,17 @@ export function Header() {
                 <p>Watch more about <a href="https://www.youtube.com/watch?v=Wn18xcM0GeI" target="__blank">brainstorming with Graphviz</a></p>
                 </details>
             </section>
+  }, {})
 
-    }
+  return (<header>
+           <div className="flex border-b-4">
+             <div className="w-1/3">
+               <a href="/">&#x1F3E0;</a> { /* a house emoji */}
+             </div>
+             <div className="flex-1">
+               <h1>Welcome to Markdown Mindmapper!</h1>
+             </div>
+           </div>
+           {displayExplaination( !hideExplaination )}
+        </header>)
+ }

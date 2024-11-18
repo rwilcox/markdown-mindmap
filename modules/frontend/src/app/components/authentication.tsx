@@ -2,17 +2,13 @@
 
 import { useState, useEffect } from 'react'
 
-import { signOut, fetchUserAttributes, fetchAuthSession, JWT } from 'aws-amplify/auth'
+import { signOut, fetchUserAttributes, fetchAuthSession } from 'aws-amplify/auth'
 import { Hub } from 'aws-amplify/utils'
 import { Authenticator } from '@aws-amplify/ui-react'
-
-
+import { SigninInfo, UserHeader } from './UserHeader'
+import { getSession, clearSession, createSession } from '@/utils/session'
 import '@aws-amplify/ui-react/styles.css';
 
-export type SigninInfo = {
-  email: string;
-  tokens?: {idToken?: JWT, accessToken?: JWT };
-}
 
 export type AuthenticationProps = {
   onSignIn: (arg0: SigninInfo) => void;
@@ -20,11 +16,21 @@ export type AuthenticationProps = {
   showAuthPanel: boolean
 }
 
+
+/**
+Authentication is abstracted by this component. It allows consumer to
+register callback functions for signin / signout, but also stores the
+given JWT in localStorage.getItem("jwtToken")
+*/
 export function Authentication(props: AuthenticationProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userEmail, setUserEmail] = useState('')
+  const [jwtTokenComponentState, setJwtTokenComponentState] = useState(getSession('TOKEN'))
 
   const handleSignout = async () => {
+    clearSession()
+
+    setJwtTokenComponentState("")
     if (props.onSignOut) { props.onSignOut() }
     signOut()
   }
@@ -40,7 +46,14 @@ export function Authentication(props: AuthenticationProps) {
 
     setUserEmail(attributes.email ?? "")
 
-    if (props.onSignIn) { props.onSignIn({email: (attributes.email ?? ""), tokens: sessionInfo.tokens}) }
+    // access vs id tokens
+    // https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-client-apps.html#user-pool-settings-client-app-token-types
+    // you want the ID token!!! not .accessToken! WD-rpw 11-08-2024
+    const jwt = sessionInfo?.tokens?.idToken?.toString() ?? ""
+    createSession(jwt, (attributes?.email) ?? "")
+    setJwtTokenComponentState(jwt) // mostly for refresh properties
+
+    if (props.onSignIn) { props.onSignIn({email: (attributes.email ?? ""), jwt}) }
   }
 
   useEffect( () => {
@@ -52,13 +65,9 @@ export function Authentication(props: AuthenticationProps) {
     })
   })
 
-  return (
-    <div>
-      {props.showAuthPanel && <Authenticator>
-          <div>
-            <button className="nativeBtn" type="button" onClick={handleSignout}>Sign Out</button>
-          </div>
-      </Authenticator>}
+  return ( <div>
+      {props.showAuthPanel && <Authenticator />}
+       <UserHeader email={userEmail} handleSignout={handleSignout} jwt={jwtTokenComponentState ?? ""} />
     </div>
    )
 }
