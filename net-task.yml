@@ -34,3 +34,12 @@ tasks:
   frontend:lint:
     os: unix
     shell: cd modules/frontend; npm run lint
+  frontend:list:todos:
+    description: prints TODOs in the codebase
+    os: unix
+    shell: cd modules/frontend; rg --no-heading TODO src/**
+  frontend:list:todos:plain:
+    description: same as frontend:list:todos BUT only prints file locations (does not print context)
+    os: unix
+    shell: |
+      cd modules/frontend; rg -n --no-heading TODO src/** | cut -d: -f1,2
