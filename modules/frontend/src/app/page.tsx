@@ -1,6 +1,8 @@
 // import Image from "next/image";
 import { Header } from './components/Header'
-import { Dynamic } from './components/dynamic'
+import dynamic from 'next/dynamic'
+
+const Dynamic = dynamic( () => import("./components/dynamic"), { ssr: false })
 
 export default function Home() {
 

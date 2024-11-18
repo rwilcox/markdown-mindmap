@@ -2,7 +2,7 @@ import { Env } from '@/config'
 
 type DocumentResponse = {
   document_id: string;
-  markdownText: string;
+  markdown_text_base64: string;
   title: string
 }
 
@@ -27,7 +27,7 @@ export class Document {
     const rawDocs: {documents: DocumentResponse[]} = await res.json()
     return rawDocs.documents.map( (rawDocument) => new Document(
       rawDocument.document_id,
-      atob(rawDocument.markdownText),
+      atob(rawDocument.markdown_text_base64),
         "",
       rawDocument.title,
       env))

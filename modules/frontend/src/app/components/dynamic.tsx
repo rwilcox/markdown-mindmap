@@ -5,6 +5,7 @@ import { Amplify } from 'aws-amplify'
 import { Env, getConfig } from "@/config"
 import { Document } from "@/models/Document"
 import { useRouter } from 'next/navigation'
+import { getSession } from "@/utils/session"
 
 import { Authentication } from './authentication'
 import { SigninInfo } from './UserHeader'
@@ -23,22 +24,21 @@ Amplify.configure({
   Dynamic is the root component of all authenticated actions. It keeps track of all user state
   and passes information down to authentication using components if required.
 */
-export function Dynamic( ) {
-  const [showAuthentication, setShowAuthentication] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [showAnonToggle, setShowAnonToggle] = useState(true)
-  const [accessToken, setAccessToken] = useState<string | null>(null)
-  const [showEditor, setShowEditor] = useState(false)
+export default function Dynamic( ) {
+  const loggedIn = getSession("EMAIL") ? true : false
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_email, setEmail] = useState("")
+  const [showAuthentication, setShowAuthentication] = useState(!loggedIn)
+  const [isAuthenticated, setIsAuthenticated] = useState(loggedIn)
+  const [showAnonToggle, setShowAnonToggle] = useState(loggedIn)
+  const [accessToken, setAccessToken] = useState<string | null>(getSession("TOKEN"))
+  const [showEditor, setShowEditor] = useState(loggedIn)
 
   function handleToggleHideAuthentication() {
     setShowAuthentication(!showAuthentication)
     setShowEditor(!showEditor)
   }
 
-  function handleSignin({email, jwt}: SigninInfo) {
+  function handleSignin({jwt}: SigninInfo) {
     const accessJWT = jwt
 
     if (!isAuthenticated && accessJWT) {
@@ -47,7 +47,7 @@ export function Dynamic( ) {
       setShowEditor(true)
       setShowAuthentication(false)
       setShowAnonToggle(false)
-      setEmail(email)
+
       setIsAuthenticated(true)
     }
   }
