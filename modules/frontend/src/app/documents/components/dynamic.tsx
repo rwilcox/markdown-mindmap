@@ -6,6 +6,8 @@ import { UserHeader } from '@/app/components/UserHeader'
 import { useRouter } from 'next/navigation'
 
 import { DocumentListConnected } from './DocumentList'
+import { DocumentEditorConnected } from './DocumentEditor'
+
 
 export function Dynamic() {
   const router = useRouter()
@@ -25,6 +27,14 @@ export function Dynamic() {
     if (documentId) { setDocumentId(documentId) } else { setDocumentId(null) }
   })
 
+  function displayListOrEditor() {
+    if (documentId) {
+      return <DocumentEditorConnected documentId={documentId} />
+    } else {
+      return <DocumentListConnected />
+    }
+  }
+
   // because Next.js does not support dynamic routes in statically generated pages
   // select the proper sub-component to display to the user
   // as the difference - an id key in the URL string - has been generated in the DocumentList
@@ -34,8 +44,7 @@ export function Dynamic() {
     <div>
       <UserHeader jwt={jwt} email={getSession("EMAIL")} handleSignout={handleSignout} />
       <div className="m-2">
-        {!documentId && <DocumentListConnected />}
-        {documentId && <div>implement me</div>}
+        {displayListOrEditor()}
         </div>
     </div>
   )

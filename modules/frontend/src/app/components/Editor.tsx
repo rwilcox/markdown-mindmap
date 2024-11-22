@@ -7,13 +7,16 @@ import MonacoEditor from '@monaco-editor/react'
 import { remark } from 'remark'
 
 import { displayIfTrue, displayIfTrue1 } from '@/utils/displayIfTrue'
+
 import MarkdownNode from '@/models/MarkdownNode'
+import { Document, DocumentExport } from '@/models/Document'
 
 import type { Runnable, Consumer } from '@/utils/FunctionalTypes'
 
 export type EditorProps = {
   isAuthenticated: boolean;
-  handleSave: (markdownStr: string, graphvizStr: string) => void
+  handleSave: (markdownStr: string, graphvizStr: string) => void;
+  documentExport?: DocumentExport;
 }
 
 type DisplayRenderedGraphImplParams = {
@@ -35,9 +38,15 @@ export function Editor(props: EditorProps) {
     hi
   }
  `
-  const [graphvizCode, setGraphVizCode]         = useState(code)                               // value of the graphviz editor
-  const [graphvizText, setGraphvizText]         = useState(code)                               // text behind the graphviz RENDER
-  const [error, setError]                       = useState<string | null>(null)                // graphviz compliation errors
+  const [graphvizCode, setGraphVizCode]         = useState(code)
+  // ^^ value of the graphviz editor
+
+  const [graphvizText, setGraphvizText]         = useState(code)
+  // ^^ text behind the graphviz RENDER
+
+  const [error, setError]                       = useState<string | null>(null)
+  // ^^ graphviz compliation errors
+
   const [markdownText, setMarkdownText]         = useState<string | undefined>("My document")  // markdown
   const [graphOrientation, setGraphOrientation] = useState("TB")
 
@@ -70,7 +79,7 @@ export function Editor(props: EditorProps) {
   const displayDocumentTitle = displayIfTrue( () => {
     return (<div>
               <label htmlFor="documentName">Document Name</label>
-              <input id="documentName" type="text" style={{border: "thin black solid"}}/>
+              <input id="documentName" type="text" style={{border: "thin black solid"}} value={props.documentExport?.title}/>
             </div>)
   })
 
@@ -97,7 +106,7 @@ export function Editor(props: EditorProps) {
           <div className="col-span-1" style={{border: "thin black solid"}}>
             <h1>Markdown</h1>
             <MonacoEditor
-              defaultValue={"hi"}
+              defaultValue={props.documentExport?.markdownText ?? "hi"}
               height="45vh"
               options={editorOptions}
               language="markdown"

@@ -20,7 +20,7 @@ tasks:
       cd modules/frontend
       npm run build
   frontend:start_app:
-    description: soon will be how to launch the frontend
+    description: how to launch the frontend
     shell: |
       cd modules/frontend/
       npm run dev
