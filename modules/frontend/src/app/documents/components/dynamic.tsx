@@ -1,16 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Env } from '@/config'
 import { getSession } from '@/utils/session'
-
 import { UserHeader } from '@/app/components/UserHeader'
 import { useRouter } from 'next/navigation'
-import { Document } from '@/models/Document'
 
-export function Dynamic({documents}: {documents: Document[]}) {
+import { DocumentListConnected } from './DocumentList'
+
+export function Dynamic() {
   const router = useRouter()
-  // const [documentList, setDocumentList] = useState([])
+  const [documentId, setDocumentId] = useState<null | string>(null)
 
   const jwt = getSession('TOKEN')
 
@@ -19,51 +18,25 @@ export function Dynamic({documents}: {documents: Document[]}) {
     // TODO: implement me
   }
 
-  function displayDocumentList(documents: Document[]) {
-    return (
-      <table className="table bg-white border border-gray-300">
-        <thead className="border-b blue-50">
-          <tr><td>Document Name</td></tr>
-        </thead>
-        <tbody>
-        {documents?.map( (current, key) => (
-          <tr className="table-row" key={`doc-${key}`}>
-            <td className="border-b gray-50">
-              <a href={`/documents/${current.document_id}`}>{current.title || "Untitled Document"}</a>
-            </td>
-          </tr>
-        ) )}
-        </tbody>
-      </table>
+  useEffect( () => {
+    const params = new URLSearchParams(window.location.search)
+    const paramsObj = Object.fromEntries(params.entries())
+    const documentId: string | undefined = paramsObj.id
+    if (documentId) { setDocumentId(documentId) } else { setDocumentId(null) }
+  })
 
-    )
-  }
-
+  // because Next.js does not support dynamic routes in statically generated pages
+  // select the proper sub-component to display to the user
+  // as the difference - an id key in the URL string - has been generated in the DocumentList
+  // component
+  // WD-rpw 11/19/2024
   return (
     <div>
       <UserHeader jwt={jwt} email={getSession("EMAIL")} handleSignout={handleSignout} />
       <div className="m-2">
-        { displayDocumentList(documents) }
+        {!documentId && <DocumentListConnected />}
+        {documentId && <div>implement me</div>}
         </div>
     </div>
   )
-}
-
-export function DynamicConnected() {
-  const [documents, setDocuments] = useState<Document[]>([])
-
-  const jwt = getSession('TOKEN')
-
-  useEffect( () => {
-    async function fetchData() {
-      if (jwt) {
-        const rawDocuments = await Document.getDocuments(jwt!, Env.Beta)
-      // TODO: don't lock this into beta
-        setDocuments(rawDocuments)
-      }
-    }
-    fetchData()
-  }, [jwt])
-
-  return <Dynamic documents={documents}/>
 }
