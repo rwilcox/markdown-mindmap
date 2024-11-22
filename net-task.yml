@@ -16,6 +16,7 @@ tasks:
     os: unix
     shell: bundle exec cody start --branch=$(git branch --show-current)
   frontend:ci:package:
+    description: Builds it. Mostly used only by CI, but not exclusively as ONLY builds
     shell: |
       cd modules/frontend
       npm run build

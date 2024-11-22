@@ -9,7 +9,7 @@ import { remark } from 'remark'
 import { displayIfTrue, displayIfTrue1 } from '@/utils/displayIfTrue'
 
 import MarkdownNode from '@/models/MarkdownNode'
-import { Document, DocumentExport } from '@/models/Document'
+import { DocumentExport } from '@/models/Document'
 
 import type { Runnable, Consumer } from '@/utils/FunctionalTypes'
 

@@ -10,7 +10,7 @@ export default function DocumentList({documents}: {documents: Document[]}) {
   /// currently Next.js does not support dynamic routes in completely staticly generated pages
   /// see https://github.com/vercel/next.js/discussions/55393
   /// this creates a PRE RESTful CONVENTIONS URL that does work in this scenario
-  function displayDocumentLink(current) {
+  function displayDocumentLink(current: Document) {
     return <a href={`/documents?id=${current.document_id}`}>{current.title || "Untitled Document"}</a>
   }
 

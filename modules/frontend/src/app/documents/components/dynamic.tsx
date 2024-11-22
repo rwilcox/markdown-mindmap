@@ -25,7 +25,7 @@ export function Dynamic() {
     const paramsObj = Object.fromEntries(params.entries())
     const documentId: string | undefined = paramsObj.id
     if (documentId) { setDocumentId(documentId) } else { setDocumentId(null) }
-  })
+  }, [setDocumentId])
 
   function displayListOrEditor() {
     if (documentId) {
