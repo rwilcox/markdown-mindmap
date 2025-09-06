@@ -42,11 +42,16 @@ export class Document {
   }
 
   public static async getDocument(idToken: string, env: Env, documentId: string): Promise<Document | undefined> {
-    // TODO: need to make an individual route for documents
-    // for now retrieve all documents and filter out
+    const res = await fetch(`https://api.markdown-map${env}.wilcoxd.com/rest/documents/v1/${documentId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${idToken}`,
+        'Content-Type': 'application/json'
+      }
+    })
 
-    const documents = await Document.getDocuments(idToken, env)
-    return documents.find( (current) => current.document_id == documentId)
+    const rawDoc = await res.json()
+    return Document.fromObject(rawDoc)
   }
 
   public static async getDocuments(idToken: string, env: Env): Promise<Document[]> {
