@@ -12,8 +12,9 @@ import { DocumentEditorConnected } from './DocumentEditor'
 export function Dynamic() {
   const router = useRouter()
   const [documentId, setDocumentId] = useState<null | string>(null)
-
-  const jwt = getSession('TOKEN')
+  const [jwt, setJwt] = useState<string>("")
+  const [email, setEmail] = useState<string>("")
+  const [isHydrated, setIsHydrated] = useState(false)
 
   function handleSignout() {
     router.push("/")
@@ -21,11 +22,19 @@ export function Dynamic() {
   }
 
   useEffect( () => {
+    // Handle hydration
+    setIsHydrated(true)
+    
+    // Get session data on client-side only
+    setJwt(getSession('TOKEN'))
+    setEmail(getSession('EMAIL'))
+    
+    // Parse URL parameters
     const params = new URLSearchParams(window.location.search)
     const paramsObj = Object.fromEntries(params.entries())
     const documentId: string | undefined = paramsObj.id
     if (documentId) { setDocumentId(documentId) } else { setDocumentId(null) }
-  }, [setDocumentId])
+  }, [])
 
   function displayListOrEditor() {
     if (documentId) {
@@ -40,9 +49,19 @@ export function Dynamic() {
   // as the difference - an id key in the URL string - has been generated in the DocumentList
   // component
   // WD-rpw 11/19/2024
+  
+  // Show loading state until hydration is complete
+  if (!isHydrated) {
+    return (
+      <div>
+        <div className="m-2">Loading...</div>
+      </div>
+    )
+  }
+  
   return (
     <div>
-      <UserHeader jwt={jwt} email={getSession("EMAIL")} handleSignout={handleSignout} />
+      <UserHeader jwt={jwt} email={email} handleSignout={handleSignout} />
       <div className="m-2">
         {displayListOrEditor()}
         </div>
