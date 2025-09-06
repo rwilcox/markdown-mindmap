@@ -27,7 +27,7 @@ export function DocumentEditorConnected({documentId}: {documentId: string}) {
       setDocument(document)
     }
     fetchData()
-  })
+  }, [documentId])
 
   if (document) {
     return <DocumentEditor documentPojo={document.toObject()} />
