@@ -7,3 +7,5 @@ export type Runnable = () => void
 export type Consumer<T> = (a: T) => void
 export type Supplier<R> = () => R
 export type Function<T, R> = (a: T) => R
+
+export type Maybe<T> = T | null
