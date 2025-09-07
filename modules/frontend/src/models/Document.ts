@@ -29,7 +29,8 @@ export class Document {
     public title: string = "",
     public currentEnv: Env = Env.Beta) {}
 
-
+  // #mark DTO methods
+  // ========================================
   public toObject(): DocumentExport {
     return {
       document_id: this.document_id,
@@ -38,6 +39,7 @@ export class Document {
       title: this.title,
       currentEnv: this.currentEnv}
   }
+
 
   public static fromObject(documentObject: DocumentImport, env: Env): Document {
     return new Document(
@@ -49,6 +51,8 @@ export class Document {
     )
   }
 
+  // #mark factory methods
+  // ==========================================
   public static async getDocument(idToken: string, env: Env, documentId: string): Promise<Document | undefined> {
     const res = await fetch(`https://api.markdown-map${env}.wilcoxd.com/rest/documents/v1/${documentId}`, {
       method: 'GET',
@@ -75,17 +79,25 @@ export class Document {
     return rawDocs.documents.map( (rawDocument) => Document.fromObject(rawDocument, env))
   }
 
+  // #mark instance methods
+  // =====================================
   public async saveDocument(idToken: string) {
-    const res = await fetch(`https://api.markdown-map${this.currentEnv}.wilcoxd.com/rest/documents/v1/`, {
-                   method: 'POST',
-                   headers: {
-                                 'Authorization':  `Bearer ${idToken}`,
-                                'Content-Type': 'application/json'
-                                },
-                   body: JSON.stringify({markdown_text_base64: btoa(this.markdownText), title: this.title})
+    let method = 'POST'
+    let url = `https://api.markdown-map${this.currentEnv}.wilcoxd.com/rest/documents/v1`
+    if (this.document_id) {
+      method = "PUT"
+      url = `https://api.markdown-map${this.currentEnv}.wilcoxd.com/rest/documents/v1/${this.document_id}`
+    }
+
+    const  res = await fetch(url, {
+      method,
+      headers: {
+        'Authorization':  `Bearer ${idToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({markdown_text_base64: btoa(this.markdownText), title: this.title})
     })
-    return await res.json()
 
+    return await res!.json()
   }
-
 }
