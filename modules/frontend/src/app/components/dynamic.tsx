@@ -23,6 +23,8 @@ Amplify.configure({
 /**
   Dynamic is the root component of all authenticated actions. It keeps track of all user state
   and passes information down to authentication using components if required.
+
+  It also acts as the New Document component for unauthenticated or authenticated users
 */
 export default function Dynamic( ) {
   const loggedIn = getSession("EMAIL") ? true : false
