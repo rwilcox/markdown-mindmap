@@ -1,4 +1,5 @@
 import { Env } from '@/config'
+import { Maybe } from '@/utils/FunctionalTypes';
 
 type DocumentResponse = {
   document_id: string;
@@ -12,6 +13,12 @@ export type DocumentExport = {
   graphvizText: string;
   title: string;
   currentEnv: Env
+}
+
+export type DocumentImport = {
+  document_id: Maybe<string>;
+  markdown_text_base64: Maybe<string>;
+  title: Maybe<string>;
 }
 
 export class Document {
@@ -32,12 +39,13 @@ export class Document {
       currentEnv: this.currentEnv}
   }
 
-  public static fromObject(documentObject: DocumentExport): Document {
+  public static fromObject(documentObject: DocumentImport, env: Env): Document {
     return new Document(
       documentObject.document_id,
-      documentObject.markdownText,
-      documentObject.title,
-      documentObject.currentEnv
+      atob(documentObject.markdown_text_base64 ?? ""),
+      "",
+      documentObject.title ?? "(Untitled)",
+      env
     )
   }
 
@@ -51,7 +59,7 @@ export class Document {
     })
 
     const rawDoc = await res.json()
-    return Document.fromObject(rawDoc)
+    return Document.fromObject(rawDoc, env)
   }
 
   public static async getDocuments(idToken: string, env: Env): Promise<Document[]> {
@@ -64,12 +72,7 @@ export class Document {
     })
 
     const rawDocs: {documents: DocumentResponse[]} = await res.json()
-    return rawDocs.documents.map( (rawDocument) => new Document(
-      rawDocument.document_id,
-      atob(rawDocument.markdown_text_base64),
-        "",
-      rawDocument.title,
-      env))
+    return rawDocs.documents.map( (rawDocument) => Document.fromObject(rawDocument, env))
   }
 
   public async saveDocument(idToken: string) {
