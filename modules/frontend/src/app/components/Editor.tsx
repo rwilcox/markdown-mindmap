@@ -15,7 +15,7 @@ import type { Runnable, Consumer } from '@/utils/FunctionalTypes'
 
 export type EditorProps = {
   isAuthenticated: boolean;
-  handleSave: (markdownStr: string, graphvizStr: string) => void;
+  handleSave: (markdownStr: string, graphvizStr: string, title: string) => void;
   documentExport?: DocumentExport;
 }
 
@@ -48,6 +48,7 @@ export function Editor(props: EditorProps) {
   // ^^ graphviz compliation errors
 
   const [markdownText, setMarkdownText]         = useState<string | undefined>("My document")  // markdown
+  const [documentTitle, setDocumentTitle]       = useState<string>(props.documentExport?.title || "Untitled Document")
   const [graphOrientation, setGraphOrientation] = useState("TB")
 
   const editorOptions = {
@@ -79,7 +80,13 @@ export function Editor(props: EditorProps) {
   const displayDocumentTitle = displayIfTrue( () => {
     return (<div>
               <label htmlFor="documentName">Document Name</label>
-              <input id="documentName" type="text" style={{border: "thin black solid"}} value={props.documentExport?.title}/>
+              <input 
+                id="documentName" 
+                type="text" 
+                style={{border: "thin black solid"}} 
+                value={documentTitle}
+                onChange={(e) => setDocumentTitle(e.target.value)}
+              />
             </div>)
   })
 
@@ -94,7 +101,7 @@ export function Editor(props: EditorProps) {
 
   function handleSave() {
     if (props.handleSave && markdownText) {
-      props.handleSave(markdownText!, graphvizCode)
+      props.handleSave(markdownText!, graphvizCode, documentTitle)
     }
   }
 
