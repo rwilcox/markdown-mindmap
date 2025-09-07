@@ -6,20 +6,30 @@ import { GraphvizRenderer } from '@yozora/react-code-renderer-graphviz'
 import MonacoEditor from '@monaco-editor/react'
 import { remark } from 'remark'
 
-import { displayIfTrue } from '@/utils/displayIfTrue'
+import { displayIfTrue, displayIfTrue1 } from '@/utils/displayIfTrue'
+
 import MarkdownNode from '@/models/MarkdownNode'
+import { DocumentExport } from '@/models/Document'
+
+import type { Runnable, Consumer } from '@/utils/FunctionalTypes'
 
 export type EditorProps = {
   isAuthenticated: boolean;
-  handleSave: (markdownStr: string, graphvizStr: string) => void
+  handleSave: (markdownStr: string, graphvizStr: string, title: string) => void;
+  documentExport?: DocumentExport;
 }
 
+type DisplayRenderedGraphImplParams = {
+  graphvizCode: string;
+  setError: Consumer<string>
+}
 
-export function displayRenderedGraphImpl({graphvizCode, setError}): JSX.Element {
+export function displayRenderedGraphImpl({graphvizCode, setError}: DisplayRenderedGraphImplParams): JSX.Element {
   return <GraphvizRenderer code={graphvizCode} onError={setError} options={{zoom: true, fit: false}}/>
 }
 
-export function displaySaveButtonImpl({handleSave}): JSX.Element {
+type DisplaySaveButtonImplParams = { handleSave: Runnable }
+export function displaySaveButtonImpl({handleSave}: DisplaySaveButtonImplParams): JSX.Element {
   return <button style={{marginLeft: "3em"}} className="nativeBtn" onClick={handleSave}>Save</button>
 }
 
@@ -28,10 +38,17 @@ export function Editor(props: EditorProps) {
     hi
   }
  `
-  const [graphvizCode, setGraphVizCode]         = useState(code)                               // value of the graphviz editor
-  const [graphvizText, setGraphvizText]         = useState(code)                               // text behind the graphviz RENDER
-  const [error, setError]                       = useState<string | null>(null)                // graphviz compliation errors
+  const [graphvizCode, setGraphVizCode]         = useState(code)
+  // ^^ value of the graphviz editor
+
+  const [graphvizText, setGraphvizText]         = useState(code)
+  // ^^ text behind the graphviz RENDER
+
+  const [error, setError]                       = useState<string | null>(null)
+  // ^^ graphviz compliation errors
+
   const [markdownText, setMarkdownText]         = useState<string | undefined>("My document")  // markdown
+  const [documentTitle, setDocumentTitle]       = useState<string>(props.documentExport?.title || "Untitled Document")
   const [graphOrientation, setGraphOrientation] = useState("TB")
 
   const editorOptions = {
@@ -58,12 +75,18 @@ export function Editor(props: EditorProps) {
     setGraphvizText(validGraphviz)
   }
 
-  const displayRenderedGraph = displayIfTrue(displayRenderedGraphImpl)
-  const displaySaveButton    = displayIfTrue(displaySaveButtonImpl)
+  const displayRenderedGraph = displayIfTrue1<DisplayRenderedGraphImplParams>(displayRenderedGraphImpl)
+  const displaySaveButton    = displayIfTrue1<DisplaySaveButtonImplParams>(displaySaveButtonImpl)
   const displayDocumentTitle = displayIfTrue( () => {
     return (<div>
               <label htmlFor="documentName">Document Name</label>
-              <input id="documentName" type="text" style={{border: "thin black solid"}}/>
+              <input 
+                id="documentName" 
+                type="text" 
+                style={{border: "thin black solid"}} 
+                value={documentTitle}
+                onChange={(e) => setDocumentTitle(e.target.value)}
+              />
             </div>)
   })
 
@@ -78,7 +101,7 @@ export function Editor(props: EditorProps) {
 
   function handleSave() {
     if (props.handleSave && markdownText) {
-      props.handleSave(markdownText!, graphvizCode)
+      props.handleSave(markdownText!, graphvizCode, documentTitle)
     }
   }
 
@@ -90,7 +113,7 @@ export function Editor(props: EditorProps) {
           <div className="col-span-1" style={{border: "thin black solid"}}>
             <h1>Markdown</h1>
             <MonacoEditor
-              defaultValue={"hi"}
+              defaultValue={props.documentExport?.markdownText ?? "hi"}
               height="45vh"
               options={editorOptions}
               language="markdown"

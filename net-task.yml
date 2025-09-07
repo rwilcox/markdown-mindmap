@@ -16,11 +16,12 @@ tasks:
     os: unix
     shell: bundle exec cody start --branch=$(git branch --show-current)
   frontend:ci:package:
+    description: Builds it. Mostly used only by CI, but not exclusively as ONLY builds
     shell: |
       cd modules/frontend
       npm run build
   frontend:start_app:
-    description: soon will be how to launch the frontend
+    description: how to launch the frontend
     shell: |
       cd modules/frontend/
       npm run dev
@@ -31,3 +32,15 @@ tasks:
       cd modules/frontend/
       yes | npx corepack install # prompts the user, blergh
       npx corepack yarn install
+  frontend:lint:
+    os: unix
+    shell: cd modules/frontend; npm run lint
+  frontend:list:todos:
+    description: prints TODOs in the codebase
+    os: unix
+    shell: cd modules/frontend; rg --no-heading TODO src/**
+  frontend:list:todos:plain:
+    description: same as frontend:list:todos BUT only prints file locations (does not print context)
+    os: unix
+    shell: |
+      cd modules/frontend; rg -n --no-heading TODO src/** | cut -d: -f1,2

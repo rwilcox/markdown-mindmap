@@ -14,23 +14,25 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Code Style
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This React app intentionally plays with normal conventions, to test out new patterns.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Intentionally splits view and model objects
 
-## Learn More
+... this was actually very helpful when moving to functional components, and then again to Next.js
 
-To learn more about Next.js, take a look at the following resources:
+It also allows us to test (theoretically test) business logic away from UI complexities.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Use Fetch vs React-Query or alternatives
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+... in said model objects, ActiveRecord style
 
-## Deploy on Vercel
+## display utilities
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+see src/utils/displayIfTrue.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## function keywords vs ES6 style function declarations
+
+For readability, we're not using `this` so nothing to consider there.
